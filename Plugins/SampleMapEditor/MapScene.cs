@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GLFrameworkEngine;
+using CafeLibrary;
+using CafeLibrary.Rendering;
 using OpenTK;
+using Toolbox.Core.IO;
 using Toolbox.Core.ViewModels;
 using MapStudio.UI;
 
@@ -16,6 +20,7 @@ namespace SampleMapEditor
         {
             //Prepare a collision caster for snapping objects onto
             SetupSceneCollision();
+
             //Add some objects to the scene
             SetupObjects(loader);
         }
@@ -25,41 +30,73 @@ namespace SampleMapEditor
         /// </summary>
         private void SetupObjects(EditorLoader loader)
         {
-            //A folder to represent in the outliner UI
-            NodeBase folder = new NodeBase("Objects");
-            //Allow toggling visibility for the folder
-            folder.HasCheckBox = true;
-            //Add it to the root of our loader
-            //It is important you use "AddChild" so the parent is applied
-            loader.Root.AddChild(folder);
-            //Icons can be obtained from the icon manager constants
-            //These also are all from font awesome and can be used directly
-            folder.Icon = IconManager.MODEL_ICON.ToString();
+            // Rename root to the level name
+            loader.Root.ActivateRename = true;
+            loader.Root.Header = loader.FileInfo.FileName.Split(".").First();
 
-            //These are default transform cubes
-            //You give it the folder you want to parent in the tree or make it null to not be present.
-            TransformableObject obj = new TransformableObject(folder);
-            //Name
-            obj.UINode.Header = "Object1";
-            obj.UINode.Icon = IconManager.MESH_ICON.ToString();
-            //Give it a transform in the scene
-            obj.Transform.Position = new Vector3(0, 10, 0);
-            obj.Transform.Scale = new Vector3(1, 1, 1);
-            obj.Transform.RotationEulerDegrees = new Vector3(0, 0, 0);
-            //You need to force update it. This is not updated per frame to save on performance
-            obj.Transform.UpdateMatrix(true);
+            List<string> hiddenObjs = new List<string>()
+            {
+                "Area",
+                "Roof",
+                "Tag"
+            };
 
-            //Lastly add your object to the scene
-            loader.AddRender(obj);
+            foreach (var roomObj in loader.MapObjList)
+            {
+                NodeBase roomFolder = new NodeBase(roomObj.Key);
+                roomFolder.Icon = IconManager.FOLDER_ICON.ToString();
+                loader.Root.AddChild(roomFolder);
 
-            //Custom renderer
-            CustomRender renderer = new CustomRender(folder);
-            renderer.UINode.Icon = IconManager.MESH_ICON.ToString();
-            renderer.UINode.Header = "Sphere";
-            renderer.Transform.Position = new Vector3(-100, 0, 0);
-            renderer.Transform.Scale = new Vector3(2.5f);
-            renderer.Transform.UpdateMatrix(true);
-            loader.AddRender(renderer);
+                foreach (var mapObj in roomObj.Value)
+                {
+                    string modelPath = loader.GetModelPathFromObject(roomObj.Key, mapObj);
+                    Console.WriteLine($"{modelPath} | {File.Exists(modelPath)}");
+
+                    if (File.Exists(modelPath))
+                    {
+                        BfresRender o = new BfresRender(modelPath, roomFolder);
+
+                        o.Models.ForEach(model =>
+                        {
+                            bool state = true;
+                            model.IsVisible = state;
+                            if (!state)
+                                Console.WriteLine($"Hiding model: {model.Name}");
+                        });
+
+                        //objFolder.AddChild(o.UINode);
+                        o.UINode.Header = mapObj.Name;
+                        o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                        o.Transform.Position = EditorLoader.GetObjPos(mapObj);
+                        o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
+                        o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
+                        o.Transform.UpdateMatrix(true);
+                        foreach (string sub in hiddenObjs)
+                        {
+                            if (mapObj.Name.Contains(sub))
+                            {
+                                o.IsVisible = false;
+                                break;
+                            }
+                        }
+                        loader.AddRender(o);
+                    }
+                    else
+                    {
+                        TransformableObject o = new TransformableObject(roomFolder);
+                        //CustomBoundingBoxRender o = new CustomBoundingBoxRender(objFolder);
+                        o.UINode.Header = mapObj.Name;
+                        o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                        o.Transform.Position = EditorLoader.GetObjPos(mapObj);
+                        o.Transform.Scale = EditorLoader.GetObjScaleTiny(mapObj);
+                        o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
+                        //o.Color = new Vector4(0.5F, 0.5F, 0.5F, 0.5F);
+                        o.Transform.UpdateMatrix(true);
+                        o.IsVisible = false;
+                        loader.AddRender(o);
+                    }
+                }
+            }
         }
 
         /// <summary>

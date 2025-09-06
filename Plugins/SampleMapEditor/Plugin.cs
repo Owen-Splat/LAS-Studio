@@ -15,10 +15,13 @@ namespace SampleMapEditor
     /// </summary>
     public class Plugin : IPlugin
     {
-        public string Name => "Sample Map Editor";
+        public string Name => "LAS Studio";
 
         public Plugin()
         {
+            //Load plugin specific data. This is where the game path is stored.
+            if (!PluginConfig.init)
+                PluginConfig.Load();
         }
     }
 }

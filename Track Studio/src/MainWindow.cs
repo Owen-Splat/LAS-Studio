@@ -35,8 +35,8 @@ namespace MapStudio
         //Plugin settings
         private IPluginConfig[] PluginSettingsUI;
         //Menus
-        private MenuItem SaveMenu;
-        private MenuItem SaveAsMenu;
+        //private MenuItem SaveMenu;
+        //private MenuItem SaveAsMenu;
         //Debug
         private bool showStyleEditor = false;
         private bool showDemoWindow = false;
@@ -232,11 +232,11 @@ namespace MapStudio
                     ImGui.SetNextWindowSize(new System.Numerics.Vector2(200, 24 * UIManager.CreateNewEditors.Count));
                 }
             };
-            fileMenu.MenuItems.Add(new MenuItem($"NEW", IconManager.NEW_FILE_ICON) { RenderItems = LoadNewFileMenu });
+            //fileMenu.MenuItems.Add(new MenuItem($"NEW", IconManager.NEW_FILE_ICON) { RenderItems = LoadNewFileMenu });
             fileMenu.MenuItems.Add(new MenuItem($"OPEN", IconManager.OPEN_ICON, OpenFileWithDialog) { Shortcut = "Ctrl+O" });
-            fileMenu.MenuItems.Add(new MenuItem($"RECENT", ' ') { RenderItems = LoadRecentFiles });
+            //fileMenu.MenuItems.Add(new MenuItem($"RECENT", ' ') { RenderItems = LoadRecentFiles });
 
-            SaveMenu = new MenuItem($"SAVE", IconManager.SAVE_ICON, () =>
+            /*SaveMenu = new MenuItem($"SAVE", IconManager.SAVE_ICON, () =>
             {
                 Workspace.ActiveWorkspace.SaveFileData();
             })
@@ -247,13 +247,14 @@ namespace MapStudio
             })
             { Shortcut = "Ctrl+Alt+S" };
             fileMenu.MenuItems.Add(SaveMenu);
-            fileMenu.MenuItems.Add(SaveAsMenu);
+            fileMenu.MenuItems.Add(SaveAsMenu);*/
             fileMenu.MenuItems.Add(new MenuItem("")); //splitter
 
             fileMenu.MenuItems.Add(new MenuItem($"CLEAR_WORKSPACE", IconManager.DELETE_ICON, ClearWorkspace));
             fileMenu.MenuItems.Add(new MenuItem($"EXIT", ' ', () => { _window.Exit(); }));
 
-            var saveConfigMenu = new MenuItem("SAVE_CONFIG") { RenderItems = LoadFileConfigMenu };
+            //var saveConfigMenu = new MenuItem("SAVE_CONFIG") { RenderItems = LoadFileConfigMenu };
+            var pathsMenu = new MenuItem("PATHS") { RenderItems = LoadPluginsMenu };
             var settingsMenu = new MenuItem("SETTINGS", LoadSettingsWindow);
             var windowsMenu = new MenuItem("WINDOWS") { RenderItems = LoadWindowMenu };
             var pluginsMenu = new MenuItem("PLUGINS") { RenderItems = LoadPluginMenus };
@@ -268,21 +269,21 @@ namespace MapStudio
             helpMenu.MenuItems.Add(new MenuItem("DONATE", WebUtil.OpenDonation));
 
 
-
             MenuItems.Add(fileMenu);
-            MenuItems.Add(saveConfigMenu);
+            MenuItems.Add(pathsMenu);
             MenuItems.Add(settingsMenu);
             MenuItems.Add(windowsMenu);
             MenuItems.Add(pluginsMenu);
             MenuItems.Add(helpMenu);
 
-            SaveMenu.Enabled = false;
-            SaveAsMenu.Enabled = false;
+            //SaveMenu.Enabled = false;
+            //SaveAsMenu.Enabled = false;
         }
 
         private void CheckUpdates()
         {
-            try
+            return;
+            /*try
             {
                 UpdaterHelper.Setup("MapStudioProject", "CTR-Studio", "Version.txt", "CTRStudio.exe");
 
@@ -315,7 +316,7 @@ namespace MapStudio
 
                 Clipboard.SetText($"{ex.Message} \n{ex.StackTrace}");
                 TinyFileDialog.MessageBoxErrorOk($"Failed to update tool! {message} Details copied to clipboard!");
-            }
+            }*/
         }
 
         private void OpenDocsOnline() => WebUtil.OpenURL("https://github.com/MapStudioProject/CTR-Studio/wiki");
@@ -537,10 +538,12 @@ namespace MapStudio
         private void OpenFileWithDialog()
         {
             ImguiFileDialog ofd = new ImguiFileDialog();
+            ofd.AddFilter("*.lvb", "Level Info File");
             if (ofd.ShowDialog("OPEN_FILE"))
             {
-                foreach (var file in ofd.FilePaths)
-                    LoadFileFormat(file);
+                //foreach (var file in ofd.FilePaths)
+                //LoadFileFormat(file);
+                LoadFileFormat(ofd.FilePaths[0]);
             }
         }
 
@@ -611,8 +614,8 @@ namespace MapStudio
         private void OnWorkspaceChanged()
         {
             bool canSave = Workspace.ActiveWorkspace != null;
-            SaveMenu.Enabled = canSave;
-            SaveAsMenu.Enabled = canSave;
+            //SaveMenu.Enabled = canSave;
+            //SaveAsMenu.Enabled = canSave;
             // SaveProjectMenu.Enabled = canSave;
             //  SaveAsProjectMenu.Enabled = canSave;
             UpdateDockLayout = true;

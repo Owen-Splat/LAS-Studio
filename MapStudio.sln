@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleMapEditor", "Plugins\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapStudio", "Track Studio\MapStudio.csproj", "{91C216DD-9F43-4B8A-B955-01A43EE2E582}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafeLibrary", "Plugins\CafeLibrary\CafeLibrary.csproj", "{7B6DBDAB-AC70-4769-ACB1-CFD8E1CC3ABA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

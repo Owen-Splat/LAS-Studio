@@ -8,7 +8,7 @@ using ImGuiNET;
 using MapStudio.UI;
 using Toolbox.Core;
 
-namespace RevoKartLibrary
+namespace SampleMapEditor
 {
     /// <summary>
     /// Represents UI for the plugin which is currently showing in the Paths section of the main menu UI.
@@ -24,12 +24,20 @@ namespace RevoKartLibrary
         [JsonProperty]
         public static string GamePath = "";
 
+        [JsonProperty]
+        public static string ModPath = "";
+
         /// <summary>
         /// Renders the current configuration UI.
         /// </summary>
         public void DrawUI()
         {
-            if (ImguiCustomWidgets.PathSelector("Sample UI", ref GamePath))
+            if (ImguiCustomWidgets.PathSelector("RomFS Path", ref GamePath))
+            {
+                Save();
+            }
+
+            if (ImguiCustomWidgets.PathSelector("Output Path", ref ModPath))
             {
                 Save();
             }
@@ -42,7 +50,7 @@ namespace RevoKartLibrary
         public static PluginConfig Load() {
             if (!File.Exists($"{Runtime.ExecutableDir}\\SampleMapEditorConfig.json")) { new PluginConfig().Save(); }
 
-            var config = JsonConvert.DeserializeObject<PluginConfig>(File.ReadAllText($"{Runtime.ExecutableDir}\\RevoKartConfig.json"));
+            var config = JsonConvert.DeserializeObject<PluginConfig>(File.ReadAllText($"{Runtime.ExecutableDir}\\SampleMapEditorConfig.json"));
             config.Reload();
             return config;
         }
@@ -60,6 +68,8 @@ namespace RevoKartLibrary
         /// </summary>
         public void Reload()
         {
+            SampleMapEditor.GlobalSettings.GamePath = GamePath;
+            SampleMapEditor.GlobalSettings.ModOutputPath = ModPath;
         }
     }
 }

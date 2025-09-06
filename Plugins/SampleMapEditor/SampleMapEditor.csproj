@@ -2,20 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<OutputPath>..\..\Track Studio\bin\Debug\net6.0\plugins\</OutputPath>
+		<OutputPath>..\..\Track Studio\bin\Debug\net5.0\plugins\</OutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<OutputPath>..\..\Track Studio\bin\Release\net6.0\plugins\</OutputPath>
+		<OutputPath>..\..\Track Studio\bin\Release\net5.0\plugins\</OutputPath>
 	</PropertyGroup>	
   <ItemGroup>
     <ProjectReference Include="..\..\GLFrameworkEngine\GLFrameworkEngine.csproj" />
     <ProjectReference Include="..\..\MapStudio.UI\MapStudio.UI.csproj" />
     <ProjectReference Include="..\..\Toolbox.Core\Toolbox.Core.csproj" />
-    <ProjectReference Include="..\..\Plugins\CafeLibrary\CafeLibrary.csproj" />
+    <ProjectReference Include="..\CafeLibrary\CafeLibrary.csproj" />
   </ItemGroup>	
   <ItemGroup>
     <Reference Include="ImGui.NET">

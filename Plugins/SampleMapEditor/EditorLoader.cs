@@ -4,12 +4,12 @@ using Toolbox.Core;
 using MapStudio.UI;
 using OpenTK;
 using GLFrameworkEngine;
+using CafeLibrary;
 using Toolbox.Core.IO;
 using System.Collections.Generic;
 using UIFramework;
 using System.Linq;
 using SampleMapEditor.FileData.Grezzo;
-using CafeLibrary;
 
 namespace SampleMapEditor
 {
@@ -52,10 +52,169 @@ namespace SampleMapEditor
         }
 
         /// <summary>
+        /// Gets the path to a model. Mod path is checked first, then the base game path
+        /// </summary>
+        public static string GetContentPath(string relativePath)
+        {
+            // check mod path first
+            string path = $"{PluginConfig.ModPath}\\{relativePath}";
+            if (File.Exists(path))
+                return path;
+
+            // use game path if there isn't a file in the mod path
+            path = $"{PluginConfig.GamePath}\\{relativePath}";
+            if (File.Exists(path))
+                return path;
+
+            // return null if there's no file anywhere
+            return null;
+        }
+
+
+        public class ActorObj
+        {
+            public ulong Hash { get; set; }
+            public ushort ID { get; set; }
+            public string Name { get; set; }
+            public string ModelName { get; set; }
+            public float[] Position { get; set; }
+            public float[] Rotation { get; set; }
+            public float[] Scale { get; set; }
+            public string[] Parameters { get; set; }
+
+            public ActorObj(ActorObj actor)
+            {
+                Hash = actor.Hash;
+                ID = actor.ID;
+                Name = actor.Name;
+                ModelName = actor.ModelName;
+                Position = actor.Position;
+                Rotation = actor.Rotation;
+                Scale = actor.Scale;
+                Parameters = actor.Parameters;
+            }
+
+            public ActorObj(Actor actor)
+            {
+                Hash = actor.Hash;
+                ID = actor.ID;
+                ActorDefinition actor_info = GlobalSettings.ActorDatabase.FirstOrDefault(x => x.Value.ID == ID).Value;
+                Name = actor_info.Name;
+                ModelName = actor_info.Model;
+                Position = actor.Position;
+                Rotation = actor.Rotation;
+                Scale = actor.Scale;
+                Parameters = actor.Parameters;
+            }
+
+            public ActorObj()
+            {
+                Hash = 0x1a2b3c4d;
+                ID = 330;
+                Name = "NpcMarin";
+                ModelName = "NpcMarin.bfres";
+                Position = new float[3];
+                Rotation = new float[3];
+                Scale = new float[3];
+                for (int i = 0; i < 3; i++)
+                    Scale[i] = 1.0f;
+                Parameters = new string[8];
+            }
+        }
+
+
+        //public List<ActorObj> MapObjList { get; set; } = new List<ActorObj>();
+        public Dictionary<string, List<ActorObj>> MapObjList { get; set; } = new Dictionary<string, List<ActorObj>>();
+
+        public static Vector3 GetObjPos(ActorObj obj)
+        {
+            var t = obj.Position;
+            return new Vector3(t[0], t[1], t[2]);
+        }
+        public static Vector3 GetObjScale(ActorObj obj)
+        {
+            var t = obj.Scale;
+            return new Vector3(t[0], t[1], t[2]);
+        }
+        public static Vector3 GetObjScaleTiny(ActorObj obj)
+        {
+            var t = obj.Scale;
+            return new Vector3(t[0] / 10, t[1] / 10, t[2] / 10);
+        }
+        public static Vector3 GetObjRotation(ActorObj obj)
+        {
+            var t = obj.Rotation;
+            return new Vector3(t[0], t[1], t[2]);
+        }
+
+
+        private void ParseActorDb()
+        {
+            GlobalSettings.LoadDataBase();
+        }
+
+
+        //
+        public string GetModelPathFromName(string roomName, string actorName)
+        {
+            ActorObj actor = MapObjList[roomName].Find(x => x.Name == actorName);
+            if (actor == null) return null;
+            if (actor.ModelName == "Null")
+            {
+                if (actor.Name == "MapStatic")
+                    return GetContentPath($"region_common\\map\\{actor.Parameters[0]}.bfres"); // Read Parameters[0] for the map model
+                else
+                    return GetContentPath($"region_common\\actor\\{actor.Name}.bfres");
+            }
+            return GetContentPath($"region_common\\actor\\{actor.ModelName}");
+        }
+
+        public string GetModelPathFromObject(string roomName, ActorObj obj)
+        {
+            return GetModelPathFromName(roomName, obj.Name);
+        }
+
+        public ActorObj GetActorFromObj(string roomName, ActorObj obj)
+        {
+            string ucName = obj.Name;
+            return GetActorFromName(roomName, ucName);
+        }
+
+        public ActorObj GetActorFromName(string roomName, string actorName)
+        {
+            ActorObj actor = MapObjList[roomName].Find(x => x.Name == actorName);
+            return actor;
+        }
+
+
+        /// <summary>
         /// Loads the given file data from a stream.
         /// </summary>
         public void Load(Stream stream)
         {
+            Console.Write(PluginConfig.GamePath);
+            ParseActorDb();
+
+            this.Root.Header = "Hello";
+            string levelFolder = FileInfo.FolderPath;
+            string[] roomFiles = Directory.GetFiles(levelFolder);
+            foreach (string roomFile in roomFiles)
+            {
+                if (!roomFile.EndsWith(".leb"))
+                    continue;
+
+                Room room = new Room(File.ReadAllBytes(roomFile));
+                List<ActorObj> actors = new List<ActorObj>();
+                foreach (Actor actor in room.Actors)
+                {
+                    ActorObj obj = new ActorObj(actor);
+                    actors.Add(obj);
+                }
+                string roomName = roomFile.Split("/").Last().Split("\\").Last();
+                roomName = roomName.Split("_").Last().Split(".").First();
+                MapObjList.Add(roomName, actors);
+            }
+            
             //For this example I will show loading 3D objects into the scene
             MapScene scene = new MapScene();
             scene.Setup(this);

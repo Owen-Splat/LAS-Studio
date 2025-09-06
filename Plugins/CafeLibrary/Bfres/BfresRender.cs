@@ -116,12 +116,9 @@ namespace CafeLibrary.Rendering
             BfresFile = bfres;
         }
 
-        public BfresRender(string filePath, NodeBase parent = null) : base(parent) {
-
-            if (YAZ0.IsCompressed(filePath))
-                UpdateModelFromFile(new System.IO.MemoryStream(YAZ0.Decompress(filePath)), filePath);
-            else
-                UpdateModelFromFile(System.IO.File.OpenRead(filePath), filePath);
+        public BfresRender(string filePath, NodeBase parent = null) : base(parent)
+        {
+            UpdateModelFromFile(System.IO.File.OpenRead(filePath), filePath);
         }
 
         public BfresRender(System.IO.Stream stream, string filePath, NodeBase parent = null) : base(parent)
@@ -129,12 +126,12 @@ namespace CafeLibrary.Rendering
             UpdateModelFromFile(stream, filePath);
         }
 
-        public BfresRender(BfresLibrary.ResFile resFile, string filePath, NodeBase parent = null) : base(parent)
+        /*public BfresRender(BfresLibrary.ResFile resFile, string filePath, NodeBase parent = null) : base(parent)
         {
             Name = filePath;
             BfresLoader.OpenBfres(resFile, this);
             UpdateBoundingBox();
-        }
+        }*/
 
         public bool UpdateModelFromFile(System.IO.Stream stream, string name)
         {
