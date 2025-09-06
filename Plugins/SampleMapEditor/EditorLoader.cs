@@ -7,6 +7,9 @@ using GLFrameworkEngine;
 using Toolbox.Core.IO;
 using System.Collections.Generic;
 using UIFramework;
+using System.Linq;
+using SampleMapEditor.FileData.Grezzo;
+using CafeLibrary;
 
 namespace SampleMapEditor
 {
@@ -24,7 +27,7 @@ namespace SampleMapEditor
         /// <summary>
         /// The extension of the plugin. This should match whatever file you plan to open.
         /// </summary>
-        public string[] Extension => new string[] { "*.szs" };
+        public string[] Extension => new string[] { "*.lvb", "*.gsheet", "*.arc" };
 
         /// <summary>
         /// Determines if the plugin can save or not.
@@ -43,16 +46,9 @@ namespace SampleMapEditor
         /// </summary>
         public bool Identify(File_Info fileInfo, Stream stream)
         {
-            //For the sake of a demo, always load the plugin
-            return true;
             //Example for loading as extension check
-            return fileInfo.Extension == ".szs";
-            //Example for checking inside the file for magic
-            //NOTE you must use "true" in arguments to keep stream open
-            using (var reader = new FileReader(stream, true))
-            {
-                return reader.CheckSignature(4, "MODL");
-            }
+            //return Extension.Contains(fileInfo.Extension);
+            return fileInfo.Extension == ".lvb";
         }
 
         /// <summary>
@@ -65,10 +61,10 @@ namespace SampleMapEditor
             scene.Setup(this);
 
             //Animation test
-            Root.AddChild(new Toolbox.Core.ViewModels.NodeBase("AnimationTest")
+            /*Root.AddChild(new Toolbox.Core.ViewModels.NodeBase("AnimationTest")
             {
                 Tag = new AnimationController(),
-            });
+            });*/
         }
 
         /// <summary>
