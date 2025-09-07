@@ -538,11 +538,10 @@ namespace CafeLibrary.Rendering
                     shader.SetBoolToInt("hasDiffuseMap", true);
                     if (name.Contains("_water"))
                     {
-                        
+                        shader.SetBoolToInt("hasDiffuseMap", false);
                     }
-                    if (name.Contains("_msk")) continue;
                 }
-                else continue;
+                if (uniformName == "" || name.Contains("_msk")) continue;
 
                 var binded = BindTexture(shader, sampler, GetTextures(), Material.TextureMaps[i], name, id);
                 shader.SetInt(uniformName, id++);

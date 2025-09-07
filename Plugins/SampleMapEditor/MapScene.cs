@@ -76,6 +76,7 @@ namespace SampleMapEditor
                             BntxFile bntx = new BntxFile(bntxPath);
                             foreach (Texture tex in bntx.Textures)
                             {
+                                if (o.Textures.ContainsKey(tex.Name)) continue;
                                 BntxTexture btex = new BntxTexture(bntx, tex);
                                 o.Textures.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
                             }
