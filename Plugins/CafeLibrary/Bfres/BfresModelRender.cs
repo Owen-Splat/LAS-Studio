@@ -319,6 +319,7 @@ namespace CafeLibrary.Rendering
 
         private void DrawMesh(ShaderProgram shader, BfresRender parentRender, BfresMeshRender mesh, bool usePolygonOffset = false)
         {
+            if (mesh.Name.Contains("_water")) return;
             if (!MeshInFrustum[mesh.Index])
                 return;
 
