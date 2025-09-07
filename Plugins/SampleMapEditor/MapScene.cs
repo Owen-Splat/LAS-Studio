@@ -50,80 +50,78 @@ namespace SampleMapEditor
             }*/
 
             foreach (var roomObj in loader.MapObjList)
-            {
-                NodeBase roomFolder = new NodeBase(roomObj.Key);
-                roomFolder.Icon = IconManager.FOLDER_ICON.ToString();
-                loader.Root.AddChild(roomFolder);
-
-                foreach (var mapObj in roomObj.Value)
                 {
-                    string modelPath = loader.GetModelPathFromObject(roomObj.Key, mapObj);
-                    Console.WriteLine($"{modelPath} | {File.Exists(modelPath)}");
+                    NodeBase roomFolder = new NodeBase(roomObj.Key);
+                    roomFolder.Icon = IconManager.FOLDER_ICON.ToString();
+                    roomFolder.HasCheckBox = true;
+                    loader.Root.AddChild(roomFolder);
 
-                    if (File.Exists(modelPath))
+                    foreach (var mapObj in roomObj.Value)
                     {
-                        BfresRender o = new BfresRender(modelPath, roomFolder);
+                        string modelPath = loader.GetModelPathFromObject(roomObj.Key, mapObj);
 
-                        /*foreach (BfshaFile shader in shaders)
+                        if (File.Exists(modelPath))
                         {
-                            o.ShaderFiles.Add(shader);
-                        }*/
+                            BfresRender o = new BfresRender(modelPath, roomFolder);
 
-                        string modelPathName = modelPath.Split("\\").Last();
-                        if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
-                        {
-                            string bntxPath = loader.GetTextureArchive(roomObj.Key, mapObj.Name);
-                            BntxFile bntx = new BntxFile(bntxPath);
-                            foreach (Texture tex in bntx.Textures)
+                            /*foreach (BfshaFile shader in shaders)
                             {
-                                if (o.Textures.ContainsKey(tex.Name)) continue;
-                                BntxTexture btex = new BntxTexture(bntx, tex);
-                                o.Textures.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
-                            }
-                        }
+                                o.ShaderFiles.Add(shader);
+                            }*/
 
-                        ModelAsset lastModel = o.Models.Last();
-                        o.Models.ForEach(model =>
-                        {
-                            bool state = model == lastModel;
-                            model.IsVisible = state;
-                            if (!state)
-                                Console.WriteLine($"Hiding model: {model.Name}");
-                        });
-
-                        //objFolder.AddChild(o.UINode);
-                        o.UINode.Header = mapObj.Name;
-                        o.UINode.Icon = IconManager.MESH_ICON.ToString();
-                        o.Transform.Position = EditorLoader.GetObjPos(mapObj);
-                        o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
-                        o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
-                        o.Transform.UpdateMatrix(true);
-                        foreach (string sub in hiddenObjs)
-                        {
-                            if (mapObj.Name.Contains(sub))
+                            string modelPathName = modelPath.Split("\\").Last();
+                            if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
                             {
-                                o.IsVisible = false;
-                                break;
+                                string bntxPath = loader.GetTextureArchive(roomObj.Key, mapObj.Name);
+                                BntxFile bntx = new BntxFile(bntxPath);
+                                foreach (Texture tex in bntx.Textures)
+                                {
+                                    if (o.Textures.ContainsKey(tex.Name)) continue;
+                                    BntxTexture btex = new BntxTexture(bntx, tex);
+                                    o.Textures.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                                }
                             }
+
+                            ModelAsset lastModel = o.Models.Last();
+                            o.Models.ForEach(model =>
+                            {
+                                bool state = model == lastModel;
+                                model.IsVisible = state;
+                            });
+
+                            //objFolder.AddChild(o.UINode);
+                            o.UINode.Header = mapObj.Name;
+                            o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                            o.Transform.Position = EditorLoader.GetObjPos(mapObj);
+                            o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
+                            o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
+                            o.Transform.UpdateMatrix(true);
+                            foreach (string sub in hiddenObjs)
+                            {
+                                if (mapObj.Name.Contains(sub))
+                                {
+                                    o.IsVisible = false;
+                                    break;
+                                }
+                            }
+                            loader.AddRender(o);
                         }
-                        loader.AddRender(o);
-                    }
-                    else
-                    {
-                        TransformableObject o = new TransformableObject(roomFolder);
-                        //CustomBoundingBoxRender o = new CustomBoundingBoxRender(objFolder);
-                        o.UINode.Header = mapObj.Name;
-                        o.UINode.Icon = IconManager.MESH_ICON.ToString();
-                        o.Transform.Position = EditorLoader.GetObjPos(mapObj);
-                        o.Transform.Scale = EditorLoader.GetObjScaleTiny(mapObj);
-                        o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
-                        //o.Color = new Vector4(0.5F, 0.5F, 0.5F, 0.5F);
-                        o.Transform.UpdateMatrix(true);
-                        o.IsVisible = false;
-                        loader.AddRender(o);
+                        else
+                        {
+                            TransformableObject o = new TransformableObject(roomFolder);
+                            //CustomBoundingBoxRender o = new CustomBoundingBoxRender(objFolder);
+                            o.UINode.Header = mapObj.Name;
+                            o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                            o.Transform.Position = EditorLoader.GetObjPos(mapObj);
+                            o.Transform.Scale = EditorLoader.GetObjScaleTiny(mapObj);
+                            o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
+                            //o.Color = new Vector4(0.5F, 0.5F, 0.5F, 0.5F);
+                            o.Transform.UpdateMatrix(true);
+                            o.IsVisible = false;
+                            loader.AddRender(o);
+                        }
                     }
                 }
-            }
         }
 
         /// <summary>
