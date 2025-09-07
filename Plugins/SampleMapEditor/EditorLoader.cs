@@ -139,7 +139,7 @@ namespace SampleMapEditor
         public static Vector3 GetObjScaleTiny(ActorObj obj)
         {
             var t = obj.Scale;
-            return new Vector3(t[0] / 10, t[1] / 10, t[2] / 10);
+            return new Vector3(t[0] / 20, t[1] / 20, t[2] / 20);
         }
         public static Vector3 GetObjRotation(ActorObj obj)
         {
@@ -199,10 +199,8 @@ namespace SampleMapEditor
         /// </summary>
         public void Load(Stream stream)
         {
-            Console.Write(PluginConfig.GamePath);
             ParseActorDb();
 
-            this.Root.Header = "Hello";
             string levelFolder = FileInfo.FolderPath;
             string[] roomFiles = Directory.GetFiles(levelFolder);
             foreach (string roomFile in roomFiles)
