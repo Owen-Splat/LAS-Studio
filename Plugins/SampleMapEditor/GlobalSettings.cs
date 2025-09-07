@@ -66,7 +66,6 @@ namespace SampleMapEditor
             {
                 if (actor.Name == "Null")
                     continue;
-                Console.WriteLine($"~ Adding Actor: {actor.Name}");
                 ActorDatabase.Add(actor.Name, actor);
             }
         }
