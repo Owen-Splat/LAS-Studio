@@ -265,8 +265,8 @@ namespace MapStudio
             {
                 AboutWindow.Opened = !AboutWindow.Opened;
             }));
-            helpMenu.MenuItems.Add(new MenuItem(""));
-            helpMenu.MenuItems.Add(new MenuItem("DONATE", WebUtil.OpenDonation));
+            //helpMenu.MenuItems.Add(new MenuItem(""));
+            //helpMenu.MenuItems.Add(new MenuItem("DONATE", WebUtil.OpenDonation));
 
 
             MenuItems.Add(fileMenu);
