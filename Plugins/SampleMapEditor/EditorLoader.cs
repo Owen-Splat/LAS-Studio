@@ -154,7 +154,6 @@ namespace SampleMapEditor
         }
 
 
-        //
         public string GetModelPathFromName(string roomName, string actorName)
         {
             ActorObj actor = MapObjList[roomName].Find(x => x.Name == actorName);
@@ -172,6 +171,14 @@ namespace SampleMapEditor
         public string GetModelPathFromObject(string roomName, ActorObj obj)
         {
             return GetModelPathFromName(roomName, obj.Name);
+        }
+
+        public string GetTextureArchive(string roomName, string ActorName)
+        {
+            ActorObj actor = MapObjList[roomName].Find(x => x.Name == ActorName);
+            if (actor == null) return null;
+            string levelName = actor.Parameters[0].Split('_')[0];
+            return GetContentPath($"region_common\\map\\{levelName}.bntx");
         }
 
         public ActorObj GetActorFromObj(string roomName, ActorObj obj)

@@ -19,6 +19,12 @@
     <ProjectReference Include="..\CafeLibrary\CafeLibrary.csproj" />
   </ItemGroup>	
   <ItemGroup>
+    <Reference Include="BfresLibrary">
+      <HintPath>..\..\Track Studio\Lib\BfresLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="BfshaLibrary">
+      <HintPath>..\..\Track Studio\Lib\BfshaLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="ImGui.NET">
       <HintPath>..\..\Track Studio\Lib\ImGui.NET.dll</HintPath>
     </Reference>
@@ -27,6 +33,9 @@
     </Reference>
     <Reference Include="Syroot.BinaryData">
       <HintPath>..\..\Track Studio\Lib\Syroot.BinaryData.dll</HintPath>
+    </Reference>
+    <Reference Include="Syroot.NintenTools.NSW.Bntx">
+      <HintPath>..\..\Track Studio\Lib\Syroot.NintenTools.NSW.Bntx.dll</HintPath>
     </Reference>
   </ItemGroup>
 

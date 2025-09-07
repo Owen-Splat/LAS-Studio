@@ -11,6 +11,9 @@ using OpenTK;
 using Toolbox.Core.IO;
 using Toolbox.Core.ViewModels;
 using MapStudio.UI;
+using Syroot.NintenTools.NSW.Bntx;
+using Toolbox.Core;
+using BfshaLibrary;
 
 namespace SampleMapEditor
 {
@@ -30,10 +33,6 @@ namespace SampleMapEditor
         /// </summary>
         private void SetupObjects(EditorLoader loader)
         {
-            // Rename root to the level name
-            loader.Root.ActivateRename = true;
-            loader.Root.Header = loader.FileInfo.FileName.Split(".").First();
-
             List<string> hiddenObjs = new List<string>()
             {
                 "Area",
@@ -41,6 +40,14 @@ namespace SampleMapEditor
                 "Tag"
             };
 
+            List<BfshaFile> shaders = new List<BfshaFile>();
+            string[] shaderFiles = Directory.GetFiles($"{PluginConfig.GamePath}\\region_common\\shader");
+            foreach (string shaderFile in shaderFiles)
+            {
+                if (shaderFile.EndsWith(".bntx"))
+                    continue;
+                shaders.Add(new BfshaFile(shaderFile));
+            }
             foreach (var roomObj in loader.MapObjList)
             {
                 NodeBase roomFolder = new NodeBase(roomObj.Key);
@@ -56,6 +63,19 @@ namespace SampleMapEditor
                     {
                         BfresRender o = new BfresRender(modelPath, roomFolder);
 
+                        if (modelPath.StartsWith("Lv") || modelPath.StartsWith("Field"))
+                        {
+                            string bntxPath = loader.GetTextureArchive(roomObj.Key, mapObj.Name);
+                            BntxFile bntx = new BntxFile(bntxPath);
+                            TextureFolder texFolder = new TextureFolder(o.BfresFile.ResFile, bntx);
+                            foreach (var texNode in texFolder.Children)
+                            {
+                                var tex = texNode.Tag as STGenericTexture;
+                                o.BfresFile.Renderer.Textures.Add(tex.Name, new GenericRenderer.TextureView(tex) { OriginalSource = tex });
+                            }
+                        }
+
+                        o.ShaderFiles = shaders;
                         o.Models.ForEach(model =>
                         {
                             bool state = true;
