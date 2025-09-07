@@ -69,19 +69,17 @@ namespace SampleMapEditor
                             o.ShaderFiles.Add(shader);
                         }*/
 
-                        /*string modelPathName = modelPath.Split("\\").Last();
+                        string modelPathName = modelPath.Split("\\").Last();
                         if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
                         {
                             string bntxPath = loader.GetTextureArchive(roomObj.Key, mapObj.Name);
                             BntxFile bntx = new BntxFile(bntxPath);
-                            TextureFolder texFolder = new TextureFolder(new BfresLibrary.ResFile(), bntx);
-                            foreach (var texNode in texFolder.Children)
+                            foreach (Texture tex in bntx.Textures)
                             {
-                                var tex = texNode.Tag as STGenericTexture;
-                                Console.WriteLine(tex.Name);
-                                o.Textures.Add(tex.Name, new GenericRenderer.TextureView(tex) { OriginalSource = tex });
+                                BntxTexture btex = new BntxTexture(bntx, tex);
+                                o.Textures.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
                             }
-                        }*/
+                        }
 
                         ModelAsset lastModel = o.Models.Last();
                         o.Models.ForEach(model =>
