@@ -536,10 +536,6 @@ namespace CafeLibrary.Rendering
                 {
                     uniformName = "u_TextureAlbedo0";
                     shader.SetBoolToInt("hasDiffuseMap", true);
-                    if (name.Contains("_water"))
-                    {
-                        shader.SetBoolToInt("hasDiffuseMap", false);
-                    }
                 }
                 if (uniformName == "" || name.Contains("_msk")) continue;
 
