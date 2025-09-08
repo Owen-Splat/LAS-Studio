@@ -49,6 +49,20 @@ namespace SampleMapEditor
                 shaders.Add(new BfshaFile(shaderFile));
             }*/
 
+            Dictionary<string, GenericRenderer.TextureView> textureArchive = new Dictionary<string, GenericRenderer.TextureView>();
+            if (loader.FileInfo.FileName.StartsWith("Lv") || loader.FileInfo.FileName.StartsWith("Field"))
+            {
+                string levelName = loader.FileInfo.FileName.Split('.')[0];
+                string bntxPath = loader.GetTextureArchive(levelName);
+                BntxFile bntx = new BntxFile(bntxPath);
+                foreach (Texture tex in bntx.Textures)
+                {
+                    BntxTexture btex = new BntxTexture(bntx, tex);
+                    textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                }
+            }
+
+
             foreach (var roomObj in loader.MapObjList)
             {
                 NodeBase roomFolder = new NodeBase(roomObj.Key);
@@ -71,21 +85,15 @@ namespace SampleMapEditor
 
                         string modelPathName = modelPath.Split("\\").Last();
                         if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
-                        {
-                            string bntxPath = loader.GetTextureArchive(roomObj.Key, mapObj.Name);
-                            BntxFile bntx = new BntxFile(bntxPath);
-                            foreach (Texture tex in bntx.Textures)
-                            {
-                                if (o.Textures.ContainsKey(tex.Name)) continue;
-                                BntxTexture btex = new BntxTexture(bntx, tex);
-                                o.Textures.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
-                            }
-                        }
+                            o.Textures = textureArchive;
 
                         ModelAsset lastModel = o.Models.Last();
                         o.Models.ForEach(model =>
                         {
-                            bool state = model == lastModel;
+                            bool state = true;
+                            if (modelPathName.StartsWith("Obj"))
+                                if (model != lastModel)
+                                    state = false;
                             model.IsVisible = state;
                         });
 
