@@ -19,6 +19,19 @@ namespace SampleMapEditor
 {
     internal class MapScene
     {
+        public List<string> hiddenObjs = new List<string>() { "Area", "Roof", "Tag" };
+        public Dictionary<string, GenericRenderer.TextureView> textureArchive = new Dictionary<string, GenericRenderer.TextureView>();
+
+        /*List<BfshaFile> shaders = new List<BfshaFile>();
+        string[] shaderFiles = Directory.GetFiles($"{PluginConfig.GamePath}\\region_common\\shader");
+        foreach (string shaderFile in shaderFiles)
+        {
+            if (shaderFile.EndsWith(".bntx"))
+                continue;
+            shaders.Add(new BfshaFile(shaderFile));
+        }*/
+
+
         public void Setup(EditorLoader loader)
         {
             //Prepare a collision caster for snapping objects onto
@@ -33,35 +46,7 @@ namespace SampleMapEditor
         /// </summary>
         private void SetupObjects(EditorLoader loader)
         {
-            List<string> hiddenObjs = new List<string>()
-            {
-                "Area",
-                "Roof",
-                "Tag"
-            };
-
-            /*List<BfshaFile> shaders = new List<BfshaFile>();
-            string[] shaderFiles = Directory.GetFiles($"{PluginConfig.GamePath}\\region_common\\shader");
-            foreach (string shaderFile in shaderFiles)
-            {
-                if (shaderFile.EndsWith(".bntx"))
-                    continue;
-                shaders.Add(new BfshaFile(shaderFile));
-            }*/
-
-            Dictionary<string, GenericRenderer.TextureView> textureArchive = new Dictionary<string, GenericRenderer.TextureView>();
-            if (loader.FileInfo.FileName.StartsWith("Lv") || loader.FileInfo.FileName.StartsWith("Field"))
-            {
-                string levelName = loader.FileInfo.FileName.Split('.')[0];
-                string bntxPath = loader.GetTextureArchive(levelName);
-                BntxFile bntx = new BntxFile(bntxPath);
-                foreach (Texture tex in bntx.Textures)
-                {
-                    BntxTexture btex = new BntxTexture(bntx, tex);
-                    textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
-                }
-            }
-
+            SetupTextures(loader);
 
             foreach (var roomObj in loader.MapObjList)
             {
@@ -73,7 +58,6 @@ namespace SampleMapEditor
                 foreach (var mapObj in roomObj.Value)
                 {
                     string modelPath = loader.GetModelPathFromObject(roomObj.Key, mapObj);
-
                     if (File.Exists(modelPath))
                     {
                         BfresRender o = new BfresRender(modelPath, roomFolder);
@@ -87,12 +71,11 @@ namespace SampleMapEditor
                         if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
                             o.Textures = textureArchive;
 
-                        ModelAsset lastModel = o.Models.Last();
                         o.Models.ForEach(model =>
                         {
                             bool state = true;
                             if (modelPathName.StartsWith("Obj"))
-                                if (model != lastModel)
+                                if (model != o.Models.Last())
                                     state = false;
                             model.IsVisible = state;
                         });
@@ -131,6 +114,34 @@ namespace SampleMapEditor
                 }
             }
         }
+
+
+        private void SetupTextures(EditorLoader loader)
+        {
+            if (loader.FileInfo.FileName.StartsWith("Lv") || loader.FileInfo.FileName.StartsWith("Field"))
+            {
+                string levelName = loader.FileInfo.FileName.Split('.')[0];
+                string bntxPath = loader.GetTextureArchive(levelName);
+                BntxFile bntx = new BntxFile(bntxPath);
+                foreach (Texture tex in bntx.Textures)
+                {
+                    BntxTexture btex = new BntxTexture(bntx, tex);
+                    textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                }
+            }
+            else if (loader.FileInfo.FileName.StartsWith("End"))
+            {
+                string levelName = "Field"; // The "Ending" level files just use the same Field map models
+                string bntxPath = loader.GetTextureArchive(levelName);
+                BntxFile bntx = new BntxFile(bntxPath);
+                foreach (Texture tex in bntx.Textures)
+                {
+                    BntxTexture btex = new BntxTexture(bntx, tex);
+                    textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                }
+            }
+        }
+
 
         /// <summary>
         /// Creates a big plane which you can drop objects onto.
