@@ -1,18 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Toolbox.Core;
 using MapStudio.UI;
-using OpenTK;
 using GLFrameworkEngine;
-using CafeLibrary;
-using Toolbox.Core.IO;
 using System.Collections.Generic;
 using UIFramework;
 using System.Linq;
 using SampleMapEditor.FileData.Grezzo;
 using ImGuiNET;
-using System.Text.RegularExpressions;
 using Toolbox.Core.ViewModels;
+using OpenTK;
 
 namespace SampleMapEditor
 {
@@ -25,12 +21,12 @@ namespace SampleMapEditor
         /// <summary>
         /// The description of the file extension of the plugin.
         /// </summary>
-        public string[] Description => new string[] { "Map Data" };
+        public string[] Description => new string[] { "Level Data" };
 
         /// <summary>
         /// The extension of the plugin. This should match whatever file you plan to open.
         /// </summary>
-        public string[] Extension => new string[] { "*.lvb", "*.gsheet", "*.arc" };
+        public string[] Extension => new string[] { "*.lvb" };
 
         /// <summary>
         /// Determines if the plugin can save or not.
@@ -80,10 +76,10 @@ namespace SampleMapEditor
             public ushort ID { get; set; }
             public string Name { get; set; }
             public string ModelName { get; set; }
-            public float[] Position { get; set; }
-            public float[] Rotation { get; set; }
-            public float[] Scale { get; set; }
-            public dynamic Parameters { get; set;}
+            public System.Numerics.Vector3 Position = System.Numerics.Vector3.Zero;
+            public System.Numerics.Vector3 Rotation = System.Numerics.Vector3.Zero;
+            public System.Numerics.Vector3 Scale = System.Numerics.Vector3.One;
+            public dynamic Parameters { get; set; }
             public string[] StringParams { get; set; }
 
             public ActorObj(ActorObj actor)
@@ -106,9 +102,9 @@ namespace SampleMapEditor
                 ActorDefinition actor_info = GlobalSettings.ActorDatabase.FirstOrDefault(x => x.Value.ID == ID).Value;
                 Name = actor_info.Name;
                 ModelName = actor_info.Model;
-                Position = actor.Position;
-                Rotation = actor.Rotation;
-                Scale = actor.Scale;
+                Position = new System.Numerics.Vector3(actor.Position[0], actor.Position[1], actor.Position[2]);
+                Rotation = new System.Numerics.Vector3(actor.Rotation[0], actor.Rotation[1], actor.Rotation[2]);
+                Scale = new System.Numerics.Vector3(actor.Scale[0], actor.Scale[1], actor.Scale[2]);
                 if (ParamDatabase.ParameterClasses.ContainsKey(Name))
                     Parameters = ParamDatabase.ParameterClasses[Name];
                 else
@@ -130,18 +126,15 @@ namespace SampleMapEditor
 
         public static Vector3 GetObjPos(ActorObj obj)
         {
-            var t = obj.Position;
-            return new Vector3(t[0], t[1], t[2]);
-        }
-        public static Vector3 GetObjScale(ActorObj obj)
-        {
-            var t = obj.Scale;
-            return new Vector3(t[0], t[1], t[2]);
+            return new Vector3(obj.Position.X, obj.Position.Y, obj.Position.Z);
         }
         public static Vector3 GetObjRotation(ActorObj obj)
         {
-            var t = obj.Rotation;
-            return new Vector3(t[0], t[1], t[2]);
+            return new Vector3(obj.Rotation.X, obj.Rotation.Y, obj.Rotation.Z);
+        }
+        public static Vector3 GetObjScale(ActorObj obj)
+        {
+            return new Vector3(obj.Scale.X, obj.Scale.Y, obj.Scale.Z);
         }
 
 
@@ -181,7 +174,6 @@ namespace SampleMapEditor
             return actor;
         }
 
-        public MapScene mapScene { get; set; } = new MapScene();
         public NodeBase currentObj { get; set; }
 
         /// <summary>
@@ -190,6 +182,9 @@ namespace SampleMapEditor
         public void Load(Stream stream)
         {
             GlobalSettings.LoadDataBase(); // Parse Actordb
+
+            MapObjList.Clear();
+            currentObj = null;
 
             string levelFolder = FileInfo.FolderPath;
             string[] roomFiles = Directory.GetFiles(levelFolder);
@@ -211,8 +206,13 @@ namespace SampleMapEditor
             }
 
             //For this example I will show loading 3D objects into the scene
+            MapScene mapScene = new MapScene();
             mapScene.Setup(this);
 
+            Root.TagUI.UIDrawer += delegate
+            {
+                DrawLevelProperties();
+            };
             Scene.SelectionChanged += delegate
             {
                 if (currentObj != null)
@@ -286,13 +286,34 @@ namespace SampleMapEditor
         }
 
 
-        public void DrawActorProperties(NodeBase node)
+        public void DrawActorProperties(EditableObject obj)
         {
+            NodeBase node = obj.UINode;
             currentObj = node;
             currentObj.IsSelected = true;
+
             ActorObj actor = (ActorObj)node.Tag;
 
-            if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.DefaultOpen))
+            actor.Position.X = obj.Transform._position.X;
+            actor.Position.Y = obj.Transform._position.Y;
+            actor.Position.Z = obj.Transform._position.Z;
+
+            actor.Rotation.X = obj.Transform.RotationEulerDegrees.X;
+            actor.Rotation.Y = obj.Transform.RotationEulerDegrees.Y;
+            actor.Rotation.Z = obj.Transform.RotationEulerDegrees.Z;
+
+            actor.Scale.X = obj.Transform.Scale.X;
+            actor.Scale.Y = obj.Transform.Scale.Y;
+            actor.Scale.Z = obj.Transform.Scale.Z;
+
+            if (ImGui.CollapsingHeader("Transform", ImGuiTreeNodeFlags.DefaultOpen))
+            {
+                ImGui.InputFloat3("Position", ref actor.Position);
+                ImGui.InputFloat3("Rotation", ref actor.Rotation);
+                ImGui.InputFloat3("Scale", ref actor.Scale);
+            }
+
+            if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.Framed))
             {
                 ImGui.InputText(actor.Parameters.Parameter1.Name, ref actor.StringParams[0], 64);
                 ImGui.InputText(actor.Parameters.Parameter2.Name, ref actor.StringParams[1], 64);
@@ -303,6 +324,12 @@ namespace SampleMapEditor
                 ImGui.InputText(actor.Parameters.Parameter7.Name, ref actor.StringParams[6], 64);
                 ImGui.InputText(actor.Parameters.Parameter8.Name, ref actor.StringParams[7], 64);
             }
+        }
+
+
+        public void DrawLevelProperties()
+        {
+            // ImGui.InputText("Level Name", ref n)
         }
     }
 }
