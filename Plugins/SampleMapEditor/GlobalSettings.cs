@@ -28,6 +28,9 @@ namespace SampleMapEditor
         /// </summary>
         public static void LoadDataBase()
         {
+            if (ActorDatabase.Count != 0)
+                return;
+
             Console.WriteLine("~ Called GlobalSettings.LoadDataBase() ~");
             if (ActorDatabase.Count > 0)
                 return;
