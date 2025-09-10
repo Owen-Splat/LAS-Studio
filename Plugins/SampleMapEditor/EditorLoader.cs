@@ -11,6 +11,7 @@ using UIFramework;
 using System.Linq;
 using SampleMapEditor.FileData.Grezzo;
 using ImGuiNET;
+using System.Text.RegularExpressions;
 
 namespace SampleMapEditor
 {
@@ -81,7 +82,8 @@ namespace SampleMapEditor
             public float[] Position { get; set; }
             public float[] Rotation { get; set; }
             public float[] Scale { get; set; }
-            public string[] Parameters { get; set; }
+            public dynamic Parameters { get; set;}
+            public string[] StringParams { get; set; }
 
             public ActorObj(ActorObj actor)
             {
@@ -93,6 +95,7 @@ namespace SampleMapEditor
                 Rotation = actor.Rotation;
                 Scale = actor.Scale;
                 Parameters = actor.Parameters;
+                StringParams = actor.StringParams;
             }
 
             public ActorObj(Actor actor)
@@ -105,7 +108,19 @@ namespace SampleMapEditor
                 Position = actor.Position;
                 Rotation = actor.Rotation;
                 Scale = actor.Scale;
-                Parameters = actor.Parameters;
+                if (ParamDatabase.ParameterClasses.ContainsKey(Name))
+                    Parameters = ParamDatabase.ParameterClasses[Name];
+                else
+                    Parameters = new BaseParameters();
+                Parameters.Parameter1.Value = actor.Parameters[0];
+                Parameters.Parameter2.Value = actor.Parameters[1];
+                Parameters.Parameter3.Value = actor.Parameters[2];
+                Parameters.Parameter4.Value = actor.Parameters[3];
+                Parameters.Parameter5.Value = actor.Parameters[4];
+                Parameters.Parameter6.Value = actor.Parameters[5];
+                Parameters.Parameter7.Value = actor.Parameters[6];
+                Parameters.Parameter8.Value = actor.Parameters[7];
+                StringParams = actor.Parameters;
             }
         }
 
@@ -143,7 +158,7 @@ namespace SampleMapEditor
             if (actor.ModelName == "Null")
             {
                 if (actor.Name == "MapStatic")
-                    return GetContentPath($"region_common\\map\\{actor.Parameters[0]}.bfres"); // Read Parameters[0] for the map model
+                    return GetContentPath($"region_common\\map\\{actor.Parameters.Parameter1.Value}.bfres"); // Read Parameters[0] for the map model
                 else
                     return GetContentPath($"region_common\\actor\\{actor.Name}.bfres");
             }
@@ -272,27 +287,17 @@ namespace SampleMapEditor
 
         public void DrawActorProperties(ActorObj actor)
         {
-            ImGui.NextColumn();
             if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.DefaultOpen))
             {
-                ImGui.InputText(GetParameterName(actor, 0), ref actor.Parameters[0], 64);
-                ImGui.InputText(GetParameterName(actor, 1), ref actor.Parameters[1], 64);
-                ImGui.InputText(GetParameterName(actor, 2), ref actor.Parameters[2], 64);
-                ImGui.InputText(GetParameterName(actor, 3), ref actor.Parameters[3], 64);
-                ImGui.InputText(GetParameterName(actor, 4), ref actor.Parameters[4], 64);
-                ImGui.InputText(GetParameterName(actor, 5), ref actor.Parameters[5], 64);
-                ImGui.InputText(GetParameterName(actor, 6), ref actor.Parameters[6], 64);
-                ImGui.InputText(GetParameterName(actor, 7), ref actor.Parameters[7], 64);
+                ImGui.InputText(actor.Parameters.Parameter1.Name, ref actor.StringParams[0], 64);
+                ImGui.InputText(actor.Parameters.Parameter2.Name, ref actor.StringParams[1], 64);
+                ImGui.InputText(actor.Parameters.Parameter3.Name, ref actor.StringParams[2], 64);
+                ImGui.InputText(actor.Parameters.Parameter4.Name, ref actor.StringParams[3], 64);
+                ImGui.InputText(actor.Parameters.Parameter5.Name, ref actor.StringParams[4], 64);
+                ImGui.InputText(actor.Parameters.Parameter6.Name, ref actor.StringParams[5], 64);
+                ImGui.InputText(actor.Parameters.Parameter7.Name, ref actor.StringParams[6], 64);
+                ImGui.InputText(actor.Parameters.Parameter8.Name, ref actor.StringParams[7], 64);
             }
-        }
-
-        public string GetParameterName(ActorObj actor, int paramIndex)
-        {
-            string paramName = $"Parameter {paramIndex + 1}";
-            if (ParamDatabase.ParameterNames.ContainsKey(actor.Name))
-                if (ParamDatabase.ParameterNames[actor.Name].Count() > paramIndex)
-                    paramName = ParamDatabase.ParameterNames[actor.Name][paramIndex];
-            return paramName;
         }
     }
 }
