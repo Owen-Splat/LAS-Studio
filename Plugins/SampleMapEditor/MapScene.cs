@@ -17,7 +17,7 @@ using BfshaLibrary;
 
 namespace SampleMapEditor
 {
-    internal class MapScene
+    public class MapScene
     {
         public List<string> hiddenObjs = new List<string>() { "Area", "Roof", "Tag" };
         public Dictionary<string, GenericRenderer.TextureView> textureArchive = new Dictionary<string, GenericRenderer.TextureView>();
@@ -83,9 +83,10 @@ namespace SampleMapEditor
 
                         o.UINode.Header = mapObj.Name;
                         o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                        o.UINode.Tag = mapObj;
                         o.UINode.TagUI.UIDrawer += delegate
                         {
-                            loader.DrawActorProperties(mapObj);
+                            loader.DrawActorProperties(o.UINode);
                         };
                         o.Transform.Position = EditorLoader.GetObjPos(mapObj);
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
@@ -106,9 +107,10 @@ namespace SampleMapEditor
                         CustomRender o = new CustomRender(roomFolder);
                         o.UINode.Header = mapObj.Name;
                         o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                        o.UINode.Tag = mapObj;
                         o.UINode.TagUI.UIDrawer += delegate
                         {
-                            loader.DrawActorProperties(mapObj);
+                            loader.DrawActorProperties(o.UINode);
                         };
                         o.Transform.Position = EditorLoader.GetObjPos(mapObj);
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);

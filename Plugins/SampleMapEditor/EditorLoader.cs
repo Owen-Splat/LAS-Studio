@@ -12,6 +12,7 @@ using System.Linq;
 using SampleMapEditor.FileData.Grezzo;
 using ImGuiNET;
 using System.Text.RegularExpressions;
+using Toolbox.Core.ViewModels;
 
 namespace SampleMapEditor
 {
@@ -125,7 +126,6 @@ namespace SampleMapEditor
         }
 
 
-        //public List<ActorObj> MapObjList { get; set; } = new List<ActorObj>();
         public Dictionary<string, List<ActorObj>> MapObjList { get; set; } = new Dictionary<string, List<ActorObj>>();
 
         public static Vector3 GetObjPos(ActorObj obj)
@@ -142,12 +142,6 @@ namespace SampleMapEditor
         {
             var t = obj.Rotation;
             return new Vector3(t[0], t[1], t[2]);
-        }
-
-
-        private void ParseActorDb()
-        {
-            GlobalSettings.LoadDataBase();
         }
 
 
@@ -187,13 +181,15 @@ namespace SampleMapEditor
             return actor;
         }
 
+        public MapScene mapScene { get; set; } = new MapScene();
+        public NodeBase currentObj { get; set; }
 
         /// <summary>
         /// Loads the given file data from a stream.
         /// </summary>
         public void Load(Stream stream)
         {
-            ParseActorDb();
+            GlobalSettings.LoadDataBase(); // Parse Actordb
 
             string levelFolder = FileInfo.FolderPath;
             string[] roomFiles = Directory.GetFiles(levelFolder);
@@ -215,8 +211,13 @@ namespace SampleMapEditor
             }
 
             //For this example I will show loading 3D objects into the scene
-            MapScene scene = new MapScene();
-            scene.Setup(this);
+            mapScene.Setup(this);
+
+            Scene.SelectionChanged += delegate
+            {
+                if (currentObj != null)
+                    currentObj.IsSelected = false;
+            };
 
             //Animation test
             /*Root.AddChild(new Toolbox.Core.ViewModels.NodeBase("AnimationTest")
@@ -285,8 +286,12 @@ namespace SampleMapEditor
         }
 
 
-        public void DrawActorProperties(ActorObj actor)
+        public void DrawActorProperties(NodeBase node)
         {
+            currentObj = node;
+            currentObj.IsSelected = true;
+            ActorObj actor = (ActorObj)node.Tag;
+
             if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 ImGui.InputText(actor.Parameters.Parameter1.Name, ref actor.StringParams[0], 64);
