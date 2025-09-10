@@ -37,6 +37,9 @@ namespace SampleMapEditor
             //Prepare a collision caster for snapping objects onto
             SetupSceneCollision();
 
+            //Prepare Texture Archive
+            SetupTextures(loader);
+
             //Add some objects to the scene
             SetupObjects(loader);
         }
@@ -46,8 +49,6 @@ namespace SampleMapEditor
         /// </summary>
         private void SetupObjects(EditorLoader loader)
         {
-            SetupTextures(loader);
-
             foreach (var roomObj in loader.MapObjList)
             {
                 NodeBase roomFolder = new NodeBase(roomObj.Key);
@@ -129,7 +130,7 @@ namespace SampleMapEditor
                     textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
                 }
             }
-            else if (loader.FileInfo.FileName.StartsWith("End"))
+            else if (loader.FileInfo.FileName.StartsWith("End") || loader.FileInfo.FileName == "KanaletCastle.lvb")
             {
                 string levelName = "Field"; // The "Ending" level files just use the same Field map models
                 string bntxPath = loader.GetTextureArchive(levelName);
