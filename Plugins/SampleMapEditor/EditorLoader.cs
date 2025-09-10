@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UIFramework;
 using System.Linq;
 using SampleMapEditor.FileData.Grezzo;
+using ImGuiNET;
 
 namespace SampleMapEditor
 {
@@ -54,7 +55,7 @@ namespace SampleMapEditor
         /// <summary>
         /// Gets the path to a model. Mod path is checked first, then the base game path
         /// </summary>
-        public static string GetContentPath(string relativePath)
+        public string GetContentPath(string relativePath)
         {
             // check mod path first
             string path = $"{PluginConfig.ModPath}\\{relativePath}";
@@ -106,20 +107,6 @@ namespace SampleMapEditor
                 Scale = actor.Scale;
                 Parameters = actor.Parameters;
             }
-
-            public ActorObj()
-            {
-                Hash = 0x1a2b3c4d;
-                ID = 330;
-                Name = "NpcMarin";
-                ModelName = "NpcMarin.bfres";
-                Position = new float[3];
-                Rotation = new float[3];
-                Scale = new float[3];
-                for (int i = 0; i < 3; i++)
-                    Scale[i] = 1.0f;
-                Parameters = new string[8];
-            }
         }
 
 
@@ -135,11 +122,6 @@ namespace SampleMapEditor
         {
             var t = obj.Scale;
             return new Vector3(t[0], t[1], t[2]);
-        }
-        public static Vector3 GetObjScaleTiny(ActorObj obj)
-        {
-            var t = obj.Scale;
-            return new Vector3(t[0] / 20, t[1] / 20, t[2] / 20);
         }
         public static Vector3 GetObjRotation(ActorObj obj)
         {
@@ -216,7 +198,7 @@ namespace SampleMapEditor
                 roomName = roomName.Split("_").Last().Split(".").First();
                 MapObjList.Add(roomName, actors);
             }
-            
+
             //For this example I will show loading 3D objects into the scene
             MapScene scene = new MapScene();
             scene.Setup(this);
@@ -285,6 +267,32 @@ namespace SampleMapEditor
             windows.Add(Workspace.TimelineWindow);
             windows.Add(Workspace.GraphWindow);
             return windows;
+        }
+
+
+        public void DrawActorProperties(ActorObj actor)
+        {
+            ImGui.NextColumn();
+            if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.DefaultOpen))
+            {
+                ImGui.InputText(GetParameterName(actor, 0), ref actor.Parameters[0], 64);
+                ImGui.InputText(GetParameterName(actor, 1), ref actor.Parameters[1], 64);
+                ImGui.InputText(GetParameterName(actor, 2), ref actor.Parameters[2], 64);
+                ImGui.InputText(GetParameterName(actor, 3), ref actor.Parameters[3], 64);
+                ImGui.InputText(GetParameterName(actor, 4), ref actor.Parameters[4], 64);
+                ImGui.InputText(GetParameterName(actor, 5), ref actor.Parameters[5], 64);
+                ImGui.InputText(GetParameterName(actor, 6), ref actor.Parameters[6], 64);
+                ImGui.InputText(GetParameterName(actor, 7), ref actor.Parameters[7], 64);
+            }
+        }
+
+        public string GetParameterName(ActorObj actor, int paramIndex)
+        {
+            string paramName = $"Parameter {paramIndex + 1}";
+            if (ParamDatabase.ParameterNames.ContainsKey(actor.Name))
+                if (ParamDatabase.ParameterNames[actor.Name].Count() > paramIndex)
+                    paramName = ParamDatabase.ParameterNames[actor.Name][paramIndex];
+            return paramName;
         }
     }
 }

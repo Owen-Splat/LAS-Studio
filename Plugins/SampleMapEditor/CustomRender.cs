@@ -15,23 +15,23 @@ namespace SampleMapEditor
     {
         public static OpenTK.Vector4 AnimatedColor = new OpenTK.Vector4(1);
 
-        UVSphereRender SphereDrawer;
+        UVCubeRenderer CubeDrawer;
         StandardMaterial Material;
 
         public CustomRender(NodeBase parent = null) : base(parent)
         {
             //Prepare our renderable sphere
-            SphereDrawer = new UVSphereRender(20, 30, 30);
+            CubeDrawer = new UVCubeRenderer(0.5f);
             //The gl framework includes some base materials to easily use
             Material = new StandardMaterial();
             //We can also apply some in engine textures
-            Material.DiffuseTextureID = RenderTools.uvTestPattern.ID;
+            Material.DiffuseTextureID = RenderTools.TexturedCubeTex.ID;
         }
 
         public void DrawColorPicking(GLContext context)
         {
             //Here we can draw under a color picking shader
-            SphereDrawer.DrawPicking(context, this, Transform.TransformMatrix);
+            CubeDrawer.DrawPicking(context, this, Transform.TransformMatrix);
         }
 
         public override void DrawModel(GLContext context, Pass pass)
@@ -53,7 +53,7 @@ namespace SampleMapEditor
 
             Material.Render(context);
             //Draw with a selection visual. 
-            SphereDrawer.DrawWithSelection(context, this.IsSelected || this.IsHovered);
+            CubeDrawer.DrawWithSelection(context, this.IsSelected || this.IsHovered);
         }
     }
 }

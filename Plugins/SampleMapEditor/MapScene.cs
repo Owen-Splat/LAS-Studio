@@ -81,9 +81,12 @@ namespace SampleMapEditor
                             model.IsVisible = state;
                         });
 
-                        //objFolder.AddChild(o.UINode);
                         o.UINode.Header = mapObj.Name;
                         o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                        o.UINode.TagUI.UIDrawer += delegate
+                        {
+                            loader.DrawActorProperties(mapObj);
+                        };
                         o.Transform.Position = EditorLoader.GetObjPos(mapObj);
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
                         o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
@@ -100,14 +103,16 @@ namespace SampleMapEditor
                     }
                     else
                     {
-                        TransformableObject o = new TransformableObject(roomFolder);
-                        //CustomBoundingBoxRender o = new CustomBoundingBoxRender(objFolder);
+                        CustomRender o = new CustomRender(roomFolder);
                         o.UINode.Header = mapObj.Name;
                         o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                        o.UINode.TagUI.UIDrawer += delegate
+                        {
+                            loader.DrawActorProperties(mapObj);
+                        };
                         o.Transform.Position = EditorLoader.GetObjPos(mapObj);
-                        o.Transform.Scale = EditorLoader.GetObjScaleTiny(mapObj);
+                        o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
                         o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
-                        //o.Color = new Vector4(0.5F, 0.5F, 0.5F, 0.5F);
                         o.Transform.UpdateMatrix(true);
                         o.IsVisible = false;
                         loader.AddRender(o);
