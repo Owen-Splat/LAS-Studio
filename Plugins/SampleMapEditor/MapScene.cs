@@ -86,7 +86,7 @@ namespace SampleMapEditor
                         o.UINode.Tag = mapObj;
                         o.UINode.TagUI.UIDrawer += delegate
                         {
-                            loader.DrawActorProperties(o.UINode);
+                            loader.DrawActorProperties(o);
                         };
                         o.Transform.Position = EditorLoader.GetObjPos(mapObj);
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
@@ -110,7 +110,7 @@ namespace SampleMapEditor
                         o.UINode.Tag = mapObj;
                         o.UINode.TagUI.UIDrawer += delegate
                         {
-                            loader.DrawActorProperties(o.UINode);
+                            loader.DrawActorProperties(o);
                         };
                         o.Transform.Position = EditorLoader.GetObjPos(mapObj);
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
