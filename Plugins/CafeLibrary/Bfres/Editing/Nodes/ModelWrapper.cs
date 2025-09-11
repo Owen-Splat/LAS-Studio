@@ -876,9 +876,9 @@ namespace CafeLibrary
                 }
             }
 
-            //Possible param animation recording
-            if (BfresWrapper.Workspace.GraphWindow.IsRecordMode && captureKeys)
-                BfresWrapper.TryInsertParamKey(Material.Name, param);
+            // //Possible param animation recording
+            // if (BfresWrapper.Workspace.GraphWindow.IsRecordMode && captureKeys)
+            //     BfresWrapper.TryInsertParamKey(Material.Name, param);
         }
 
         public void UpdateMaterialBlock()
@@ -896,9 +896,10 @@ namespace CafeLibrary
 
         public void OnTextureUpdated(string sampler, string texture, bool captureKeys = false)
         {
-            //Possible texture animation recording
-            if (BfresWrapper.Workspace.GraphWindow.IsRecordMode && captureKeys)
-                BfresWrapper.TryInsertTextureKey(Material.Name, sampler, texture);
+            return;
+            // //Possible texture animation recording
+            // if (BfresWrapper.Workspace.GraphWindow.IsRecordMode && captureKeys)
+            //     BfresWrapper.TryInsertTextureKey(Material.Name, sampler, texture);
         }
 
         public void ExportTextureMapData(string texture)

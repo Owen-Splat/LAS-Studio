@@ -280,8 +280,8 @@ namespace SampleMapEditor
             windows.Add(Workspace.PropertyWindow);
             windows.Add(Workspace.ConsoleWindow);
             windows.Add(Workspace.ViewportWindow);
-            windows.Add(Workspace.TimelineWindow);
-            windows.Add(Workspace.GraphWindow);
+            // windows.Add(Workspace.TimelineWindow);
+            // windows.Add(Workspace.GraphWindow);
             return windows;
         }
 

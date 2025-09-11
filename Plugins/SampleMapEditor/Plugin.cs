@@ -15,7 +15,7 @@ namespace SampleMapEditor
     /// </summary>
     public class Plugin : IPlugin
     {
-        public string Name => "LAS Studio";
+        public string Name => "Sample Map Editor";
 
         public Plugin()
         {

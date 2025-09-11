@@ -16,15 +16,13 @@ namespace MapStudio
 
         public override ImGuiWindowFlags Flags => ImGuiWindowFlags.NoDocking;
 
-        string AppVersion;
+        public static string AppVersion = "0.1.0";
         string[] ChangeLog;
         string[] ChangeType;
 
         public AboutWindow()
         {
             Size = new Vector2(500, 600);
-            var asssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
-            AppVersion = asssemblyVersion.ToString();
             Opened = false;
 
             //Parse changelog
@@ -65,31 +63,24 @@ namespace MapStudio
             ImGui.AlignTextToFramePadding();
 
             var textPos = ImGui.GetCursorPos();
-            ImGui.Text($"{TranslationSource.GetText("TRACK_STUDIO")} v{AppVersion}");
+            ImGui.Text($"LAS Level Editor v{AppVersion}");
             ImGui.SetWindowFontScale(1);
 
             ImGui.SetCursorPos(new Vector2(textPos.X, textPos.Y + 30));
-            MapStudio.UI.ImGuiHelper.HyperLinkText("Copyright @ KillzXGaming 2022");
+            ImGuiHelper.HyperLinkText("Copyright @ Owen_Splat 2025");
 
             ImGui.SetCursorPos(bottom);
 
             if (ImGui.CollapsingHeader("Credits"))
             {
-                ImGui.BulletText("KillzXGaming - main developer");
-                ImGui.BulletText("Abood XD / MasterVermilli0n - for wii u and switch texture swizzling. Also for the awesome effect decomp library.");
-                ImGui.BulletText("Syroot - for wii u bfres library and binary IO");
-                ImGui.BulletText("Ryujinx - for shader libraries used to decompile and translate switch binaries into glsl code.");
-                ImGui.BulletText("JuPaHe64 - created animation timeline and helped me fix gizmo tools");
-                ImGui.BulletText("OpenTK Team - for opengl c# bindings.");
-                ImGui.BulletText("mellinoe and IMGUI Team - for c# port and creating the IMGUI library");
-                ImGui.BulletText("Atlas & Wexos for researching and helping aspects of the game");
-                ImGui.BulletText("MelonSpeedruns for program icon");
-                
-                MapStudio.UI.ImGuiHelper.BoldText("Beta Testers:");
-                ImGui.BulletText("voidsource");
-                ImGui.BulletText("Stuffy360");
-                ImGui.BulletText("Divengerss");
-                ImGui.BulletText("BluGoku");
+                ImGui.BulletText("Owen_Splat - Main Developer");
+                ImGui.BulletText("MapStudioProject - Sample-Editor template");
+
+                // ImGuiHelper.BoldText("Beta Testers:");
+                // ImGui.BulletText("User");
+                // ImGui.BulletText("User");
+                // ImGui.BulletText("User");
+                // ImGui.BulletText("User");
             }
 
             var flag = ImGuiWindowFlags.HorizontalScrollbar;

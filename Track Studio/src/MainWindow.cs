@@ -68,9 +68,8 @@ namespace MapStudio
                 Directory.CreateDirectory(GlobalSettings.Program.ProjectDirectory);
 
             SettingsWindow = new SettingsWindow(GlobalSettings);
-
-
             AboutWindow = new AboutWindow();
+
             Windows.Add(SettingsWindow);
             Windows.Add(AboutWindow);
 
@@ -259,14 +258,10 @@ namespace MapStudio
             var windowsMenu = new MenuItem("WINDOWS") { RenderItems = LoadWindowMenu };
             var pluginsMenu = new MenuItem("PLUGINS") { RenderItems = LoadPluginMenus };
             var helpMenu = new MenuItem("HELP");
-            helpMenu.MenuItems.Add(new MenuItem("CHECK_UPDATES", CheckUpdates));
-            helpMenu.MenuItems.Add(new MenuItem("DOCUMENTATION", OpenDocsOnline));
             helpMenu.MenuItems.Add(new MenuItem("ABOUT", () =>
             {
                 AboutWindow.Opened = !AboutWindow.Opened;
             }));
-            //helpMenu.MenuItems.Add(new MenuItem(""));
-            //helpMenu.MenuItems.Add(new MenuItem("DONATE", WebUtil.OpenDonation));
 
 
             MenuItems.Add(fileMenu);
@@ -280,50 +275,6 @@ namespace MapStudio
             //SaveAsMenu.Enabled = false;
         }
 
-        private void CheckUpdates()
-        {
-            return;
-            /*try
-            {
-                UpdaterHelper.Setup("MapStudioProject", "CTR-Studio", "Version.txt", "CTRStudio.exe");
-
-                var release = UpdaterHelper.TryGetLatest(Runtime.ExecutableDir, 0);
-                if (release == null)
-                    TinyFileDialog.MessageBoxInfoOk($"Build is up to date with the latest repo!");
-                else
-                {
-                    int result = TinyFileDialog.MessageBoxInfoYesNo($"Found new release {release.Name}! Do you want to update?");
-                    if (result == 1)
-                    {
-                        ProcessLoading.Instance.IsLoading = true;
-                        //Download
-                        UpdaterHelper.DownloadRelease(Runtime.ExecutableDir, release, 0, () =>
-                        {
-                            ProcessLoading.Instance.Update(100, 100, $"Update will now install.", "Updater");
-
-                            Console.WriteLine("Installing update..");
-                            //Exit the tool and install via the updater
-                            UpdaterHelper.InstallUpdate("-b");
-
-                            ProcessLoading.Instance.IsLoading = false;
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = ex.Message.Replace("'", "");
-
-                Clipboard.SetText($"{ex.Message} \n{ex.StackTrace}");
-                TinyFileDialog.MessageBoxErrorOk($"Failed to update tool! {message} Details copied to clipboard!");
-            }*/
-        }
-
-        private void OpenDocsOnline() => WebUtil.OpenURL("https://github.com/MapStudioProject/CTR-Studio/wiki");
-
-        private void OpenDocsOffline()
-        {
-        }
 
         private void LoadSettingsWindow()
         {
@@ -418,12 +369,12 @@ namespace MapStudio
                 }
             }
 
-#if DEBUG
-            if (ImGui.MenuItem($"{TranslationSource.GetText("STYLE_EDITOR")}", "", showStyleEditor))
-                showStyleEditor = showStyleEditor ? false : true;
-            if (ImGui.MenuItem($"Demo Window", "", showDemoWindow))
-                showDemoWindow = showDemoWindow ? false : true;
-#endif
+// #if DEBUG
+//             if (ImGui.MenuItem($"{TranslationSource.GetText("STYLE_EDITOR")}", "", showStyleEditor))
+//                 showStyleEditor = showStyleEditor ? false : true;
+//             if (ImGui.MenuItem($"Demo Window", "", showDemoWindow))
+//                 showDemoWindow = showDemoWindow ? false : true;
+// #endif
 
             if (Workspace.ActiveWorkspace != null)
             {

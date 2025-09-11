@@ -45,11 +45,10 @@ namespace MapStudio
             InitGLResourceCreation();
             //Load the window and run the application
             GraphicsMode mode = new GraphicsMode(new ColorFormat(32), 24, 8, 4, new ColorFormat(32), 2, false);
-            var asssemblyVersion = GetRepoCompileDate(Runtime.ExecutableDir);
 
             string programName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 
-            var wnd = new UIFramework.Framework(new MainWindow(argumentHandle), mode, asssemblyVersion, programName);
+            var wnd = new UIFramework.Framework(new MainWindow(argumentHandle), mode, AboutWindow.AppVersion, programName);
             wnd.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
             wnd.VSync = OpenTK.VSyncMode.On;
             wnd.Run();

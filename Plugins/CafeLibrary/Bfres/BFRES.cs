@@ -56,29 +56,32 @@ namespace CafeLibrary
 
         public void TryInsertBoneKey(STBone bone, BfresSkeletalAnim.InsertFlags flags)
         {
-            var anim = this.Workspace.GetActiveAnimation();
-            if (anim != null && anim is BfresSkeletalAnim)
-                ((BfresSkeletalAnim)anim).InsertBoneKey(bone, flags);
-            else
-                TinyFileDialog.MessageBoxInfoOk($"A skeletal animation must be active to insert keys! Select one to activate.");
+            return;
+            // var anim = this.Workspace.GetActiveAnimation();
+            // if (anim != null && anim is BfresSkeletalAnim)
+            //     ((BfresSkeletalAnim)anim).InsertBoneKey(bone, flags);
+            // else
+            //     TinyFileDialog.MessageBoxInfoOk($"A skeletal animation must be active to insert keys! Select one to activate.");
         }
 
         public void TryInsertParamKey(string material, ShaderParam param)
         {
-            var anim = this.Workspace.GetActiveAnimation();
-            if (anim != null && anim is BfresMaterialAnim)
-                ((BfresMaterialAnim)anim).InsertParamKey(material, param);
-            else
-                TinyFileDialog.MessageBoxInfoOk($"A shader param animation must be active to insert keys! Select one to activate.");
+            return;
+            // var anim = this.Workspace.GetActiveAnimation();
+            // if (anim != null && anim is BfresMaterialAnim)
+            //     ((BfresMaterialAnim)anim).InsertParamKey(material, param);
+            // else
+            //     TinyFileDialog.MessageBoxInfoOk($"A shader param animation must be active to insert keys! Select one to activate.");
         }
 
         public void TryInsertTextureKey(string material, string sampler, string texture)
         {
-            var anim = this.Workspace.GetActiveAnimation();
-            if (anim != null && anim is BfresMaterialAnim)
-                ((BfresMaterialAnim)anim).InsertTextureKey(material, sampler, texture);
-            else
-                TinyFileDialog.MessageBoxInfoOk($"A texture pattern animation must be active to insert keys! Select one to activate.");
+            return;
+            // var anim = this.Workspace.GetActiveAnimation();
+            // if (anim != null && anim is BfresMaterialAnim)
+            //     ((BfresMaterialAnim)anim).InsertTextureKey(material, sampler, texture);
+            // else
+            //     TinyFileDialog.MessageBoxInfoOk($"A texture pattern animation must be active to insert keys! Select one to activate.");
         }
 
         public override bool CreateNew()
@@ -252,9 +255,9 @@ namespace CafeLibrary
             windows.Add(Workspace.AssetViewWindow);
             windows.Add(Workspace.HelpWindow);
             windows.Add(Workspace.ViewportWindow);
-            windows.Add(Workspace.TimelineWindow);
-            windows.Add(Workspace.GraphWindow);
-            windows.Add(Workspace.UVWindow);
+            // windows.Add(Workspace.TimelineWindow);
+            // windows.Add(Workspace.GraphWindow);
+            // windows.Add(Workspace.UVWindow);
             return windows;
         }
 
