@@ -116,7 +116,6 @@ namespace SampleMapEditor
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
                         o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
                         o.Transform.UpdateMatrix(true);
-                        o.IsVisible = false;
                         loader.AddRender(o);
                     }
                 }

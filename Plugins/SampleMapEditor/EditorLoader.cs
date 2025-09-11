@@ -9,6 +9,8 @@ using SampleMapEditor.FileData.Grezzo;
 using ImGuiNET;
 using Toolbox.Core.ViewModels;
 using OpenTK;
+using System;
+using CafeLibrary.Rendering;
 
 namespace SampleMapEditor
 {
@@ -275,11 +277,16 @@ namespace SampleMapEditor
 
         public override List<DockWindow> PrepareDocks()
         {
-            List<DockWindow> windows = new List<DockWindow>();
-            windows.Add(Workspace.Outliner);
-            windows.Add(Workspace.PropertyWindow);
-            windows.Add(Workspace.ConsoleWindow);
-            windows.Add(Workspace.ViewportWindow);
+            List<DockWindow> windows = new List<DockWindow>
+            {
+                Workspace.Outliner,
+                Workspace.PropertyWindow,
+                Workspace.ConsoleWindow,
+                Workspace.AssetViewWindow,
+                Workspace.HelpWindow,
+                Workspace.ToolWindow,
+                Workspace.ViewportWindow
+            };
             // windows.Add(Workspace.TimelineWindow);
             // windows.Add(Workspace.GraphWindow);
             return windows;
@@ -362,6 +369,45 @@ namespace SampleMapEditor
         public void DrawLevelProperties()
         {
             // ImGui.InputText("Level Name", ref n)
+        }
+
+
+        public override void DrawHelpWindow()
+        {
+            if (ImGuiNET.ImGui.CollapsingHeader("Camera", ImGuiNET.ImGuiTreeNodeFlags.DefaultOpen))
+            {
+                ImGuiHelper.BoldTextLabel("WASD", "Move camera");
+                ImGuiHelper.BoldTextLabel("Spacebar", "Move up");
+                ImGuiHelper.BoldTextLabel("Spacebar + Shift", "Move down");
+                ImGuiHelper.BoldTextLabel("Spacebar + Ctrl", "Focus Viewport");
+                ImGuiHelper.BoldTextLabel("MouseWheel", "Zoom in/out");
+            }
+        }
+
+
+        public bool HideObjectsWithoutModels = false;
+
+        public override void DrawToolWindow()
+        {
+            if (ImGui.Checkbox("Hide Objects Without Models", ref HideObjectsWithoutModels))
+            {
+                foreach (EditableObject render in Scene.Objects)
+                {
+                    if (render is BfresRender)
+                        continue;
+                    render.IsVisible = !HideObjectsWithoutModels;
+                }
+            }
+
+            ImGui.Separator();
+
+            if (ImGui.Button("Change Object"))
+            {
+                if (currentObj != null)
+                {
+                    Console.WriteLine($"Changing type of actor of {currentObj.Header}. This does not do anything yet.");
+                }
+            }
         }
     }
 }
