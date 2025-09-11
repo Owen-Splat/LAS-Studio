@@ -42,6 +42,7 @@ namespace SampleMapEditor
         public Parameter(int index)
         {
             Name = $"Parameter {index + 1}";
+            Value = "";
         }
 
         public Parameter(string name, object value)

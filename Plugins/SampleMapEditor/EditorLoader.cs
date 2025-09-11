@@ -121,6 +121,22 @@ namespace SampleMapEditor
                 StringParams = actor.Parameters;
                 Flags = actor.Switches;
             }
+
+            public ActorObj(ActorDefinition definition)
+            {
+                ID = definition.ID;
+                Name = definition.Name;
+                ModelName = definition.Model;
+                Parameters = ParamDatabase.GetParameterClass(Name);
+                StringParams = Parameters.GetParametersAsStrings();
+                Flags = new ActorSwitch[4]
+                {
+                    new(0, 4, 0),
+                    new(0, 4, 0),
+                    new(0, 4, 0),
+                    new(0, 4, 0)
+                };
+            }
         }
 
 
@@ -154,9 +170,17 @@ namespace SampleMapEditor
             return GetContentPath($"region_common\\actor\\{actor.ModelName}");
         }
 
-        public string GetModelPathFromObject(string roomName, ActorObj obj)
+        public string GetModelPathFromObject(ActorObj actor)
         {
-            return GetModelPathFromName(roomName, obj.Name);
+            if (actor == null) return null;
+            if (actor.ModelName == "Null")
+            {
+                if (actor.Name == "MapStatic")
+                    return GetContentPath($"region_common\\map\\{actor.Parameters.Parameter1.Value}.bfres"); // Read Parameters[0] for the map model
+                else
+                    return GetContentPath($"region_common\\actor\\{actor.Name}.bfres");
+            }
+            return GetContentPath($"region_common\\actor\\{actor.ModelName}");
         }
 
         public string GetTextureArchive(string levelName)
@@ -176,6 +200,7 @@ namespace SampleMapEditor
             return actor;
         }
 
+        public NodeBase currentRoom { get; set; }
         public NodeBase currentObj { get; set; }
 
         /// <summary>
@@ -221,11 +246,8 @@ namespace SampleMapEditor
                     currentObj.IsSelected = false;
             };
 
-            //Animation test
-            /*Root.AddChild(new Toolbox.Core.ViewModels.NodeBase("AnimationTest")
-            {
-                Tag = new AnimationController(),
-            });*/
+            // Asset Window
+            Workspace.AddAssetCategory(new AssetViewMapObject());
         }
 
         /// <summary>
@@ -252,19 +274,107 @@ namespace SampleMapEditor
         /// </summary>
         public override void AssetViewportDrop(AssetItem item, Vector2 screenPosition)
         {
+            // Return if a room is not selected
+            if (currentRoom == null)
+                return;
+
+            // Now get the AssetWindow object
+            MapObjectAsset asset = item as MapObjectAsset;
+            if (asset == null)
+                return;
+
+            if (currentObj != null)
+                currentObj.IsSelected = false;
+
             //viewport context
             var context = GLContext.ActiveContext;
 
             //Screen coords can be converted into 3D space
             //By default it will spawn in the mouse position at a distance
             Vector3 position = context.ScreenToWorld(screenPosition.X, screenPosition.Y, 100);
+            Quaternion rotation = Quaternion.Identity;
             //Collision dropping can be used to drop these assets to the ground from CollisionCaster
             if (context.EnableDropToCollision)
             {
                 Quaternion rot = Quaternion.Identity;
                 CollisionDetection.SetObjectToCollision(context, context.CollisionCaster, screenPosition, ref position, ref rot);
             }
+
+            // Add the object
+            EditableObject render = AddObjectAsset(asset.ObjDefinition);
+            render.Transform.Position = position;
+            render.Transform.Rotation = rotation;
+            render.Transform.UpdateMatrix(true);
+            // render.UINode.IsSelected = true;
+            AddRender(render);
+            // Scene.SelectionUIChanged?.Invoke(render.UINode, EventArgs.Empty);
+
+            //Update the SRT tool if active
+            GLContext.ActiveContext.TransformTools.UpdateOrigin();
+            GLContext.ActiveContext.UpdateViewport = true;
+            currentRoom = null;
         }
+
+
+        public List<string> hiddenObjs = new List<string>() { "Area", "Roof", "Tag" };
+        public Dictionary<string, GenericRenderer.TextureView> textureArchive = new Dictionary<string, GenericRenderer.TextureView>();
+
+        public EditableObject AddObjectAsset(ActorDefinition definition)
+        {
+            ActorObj actor = new ActorObj(definition);
+            List<ActorObj> actors = MapObjList[currentRoom.Header];
+            MapObjList[currentRoom.Header].Add(actor);
+
+            // now add the render - same code from MapScene
+            string modelPath = GetModelPathFromObject(actor);
+            if (File.Exists(modelPath))
+            {
+                BfresRender o = new BfresRender(modelPath, currentRoom);
+
+                string modelPathName = modelPath.Split("\\").Last();
+                if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
+                    o.Textures = textureArchive;
+
+                o.Models.ForEach(model =>
+                {
+                    bool state = true;
+                    if (modelPathName.StartsWith("Obj"))
+                        if (model != o.Models.Last())
+                            state = false;
+                    model.IsVisible = state;
+                });
+
+                o.UINode.Header = actor.Name;
+                o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                o.UINode.Tag = actor;
+                o.UINode.TagUI.UIDrawer += delegate
+                {
+                    DrawActorProperties(o);
+                };
+                foreach (string sub in hiddenObjs)
+                {
+                    if (actor.Name.Contains(sub))
+                    {
+                        o.IsVisible = false;
+                        break;
+                    }
+                }
+                return o;
+            }
+            else
+            {
+                CustomRender o = new CustomRender(currentRoom);
+                o.UINode.Header = actor.Name;
+                o.UINode.Icon = IconManager.MESH_ICON.ToString();
+                o.UINode.Tag = actor;
+                o.UINode.TagUI.UIDrawer += delegate
+                {
+                    DrawActorProperties(o);
+                };
+                return o;
+            }
+        }
+
 
         /// <summary>
         /// Checks for dropped files to use for the editor.
@@ -296,8 +406,14 @@ namespace SampleMapEditor
         public void DrawActorProperties(EditableObject obj)
         {
             NodeBase node = obj.UINode;
+            if (node == currentRoom || node == Root)
+            {
+                currentObj = null;
+                return;
+            }
             currentObj = node;
             currentObj.IsSelected = true;
+            currentRoom = currentObj.Parent;
 
             ActorObj actor = (ActorObj)node.Tag;
 
@@ -408,6 +524,12 @@ namespace SampleMapEditor
                     Console.WriteLine($"Changing type of actor of {currentObj.Header}. This does not do anything yet.");
                 }
             }
+        }
+
+
+        public void RoomObjectSelected(NodeBase roomNode)
+        {
+            currentRoom = roomNode;
         }
     }
 }

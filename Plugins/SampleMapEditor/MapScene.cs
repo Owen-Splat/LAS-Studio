@@ -19,19 +19,6 @@ namespace SampleMapEditor
 {
     public class MapScene
     {
-        public List<string> hiddenObjs = new List<string>() { "Area", "Roof", "Tag" };
-        public Dictionary<string, GenericRenderer.TextureView> textureArchive = new Dictionary<string, GenericRenderer.TextureView>();
-
-        /*List<BfshaFile> shaders = new List<BfshaFile>();
-        string[] shaderFiles = Directory.GetFiles($"{PluginConfig.GamePath}\\region_common\\shader");
-        foreach (string shaderFile in shaderFiles)
-        {
-            if (shaderFile.EndsWith(".bntx"))
-                continue;
-            shaders.Add(new BfshaFile(shaderFile));
-        }*/
-
-
         public void Setup(EditorLoader loader)
         {
             //Prepare a collision caster for snapping objects onto
@@ -54,23 +41,22 @@ namespace SampleMapEditor
                 NodeBase roomFolder = new NodeBase(roomObj.Key);
                 roomFolder.Icon = IconManager.FOLDER_ICON.ToString();
                 roomFolder.HasCheckBox = true;
+                roomFolder.TagUI.UIDrawer += delegate
+                {
+                    loader.RoomObjectSelected(roomFolder);
+                };
                 loader.Root.AddChild(roomFolder);
 
                 foreach (var mapObj in roomObj.Value)
                 {
-                    string modelPath = loader.GetModelPathFromObject(roomObj.Key, mapObj);
+                    string modelPath = loader.GetModelPathFromObject(mapObj);
                     if (File.Exists(modelPath))
                     {
                         BfresRender o = new BfresRender(modelPath, roomFolder);
 
-                        /*foreach (BfshaFile shader in shaders)
-                        {
-                            o.ShaderFiles.Add(shader);
-                        }*/
-
                         string modelPathName = modelPath.Split("\\").Last();
                         if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
-                            o.Textures = textureArchive;
+                            o.Textures = loader.textureArchive;
 
                         o.Models.ForEach(model =>
                         {
@@ -92,7 +78,7 @@ namespace SampleMapEditor
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
                         o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
                         o.Transform.UpdateMatrix(true);
-                        foreach (string sub in hiddenObjs)
+                        foreach (string sub in loader.hiddenObjs)
                         {
                             if (mapObj.Name.Contains(sub))
                             {
@@ -133,7 +119,7 @@ namespace SampleMapEditor
                 foreach (Texture tex in bntx.Textures)
                 {
                     BntxTexture btex = new BntxTexture(bntx, tex);
-                    textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                    loader.textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
                 }
             }
             else if (loader.FileInfo.FileName.StartsWith("End") || loader.FileInfo.FileName == "KanaletCastle.lvb")
@@ -144,7 +130,7 @@ namespace SampleMapEditor
                 foreach (Texture tex in bntx.Textures)
                 {
                     BntxTexture btex = new BntxTexture(bntx, tex);
-                    textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                    loader.textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
                 }
             }
         }

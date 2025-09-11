@@ -15,7 +15,7 @@ namespace SampleMapEditor.FileData.Grezzo
         public string Name;
         public ushort ID;
         public ushort XE;
-        public uint RoomID;
+        public uint ZoneID;
         public Vector3 Position = Vector3.Zero;
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
@@ -36,7 +36,7 @@ namespace SampleMapEditor.FileData.Grezzo
 
             ID = FixedHash.ReadInt(data, 0xC, 2);
             XE = FixedHash.ReadInt(data, 0xE, 2);
-            RoomID = FixedHash.ReadInt(data, 0x10, 4);
+            ZoneID = FixedHash.ReadInt(data, 0x10, 4);
             Position = FixedHash.ReadVector3(data, 0x14);
             Rotation = FixedHash.ReadVector3(data, 0x20);
             Scale = FixedHash.ReadVector3(data, 0x2C);
