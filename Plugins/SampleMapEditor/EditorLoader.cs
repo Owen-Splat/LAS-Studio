@@ -81,6 +81,7 @@ namespace SampleMapEditor
             public System.Numerics.Vector3 Scale = System.Numerics.Vector3.One;
             public dynamic Parameters { get; set; }
             public string[] StringParams { get; set; }
+            public ActorSwitch[] Flags { get; set; }
 
             public ActorObj(ActorObj actor)
             {
@@ -93,6 +94,7 @@ namespace SampleMapEditor
                 Scale = actor.Scale;
                 Parameters = actor.Parameters;
                 StringParams = actor.StringParams;
+                Flags = actor.Flags;
             }
 
             public ActorObj(Actor actor)
@@ -102,9 +104,9 @@ namespace SampleMapEditor
                 ActorDefinition actor_info = GlobalSettings.ActorDatabase.FirstOrDefault(x => x.Value.ID == ID).Value;
                 Name = actor_info.Name;
                 ModelName = actor_info.Model;
-                Position = new System.Numerics.Vector3(actor.Position[0], actor.Position[1], actor.Position[2]);
-                Rotation = new System.Numerics.Vector3(actor.Rotation[0], actor.Rotation[1], actor.Rotation[2]);
-                Scale = new System.Numerics.Vector3(actor.Scale[0], actor.Scale[1], actor.Scale[2]);
+                Position = actor.Position;
+                Rotation = actor.Rotation;
+                Scale = actor.Scale;
                 Parameters = ParamDatabase.GetParameterClass(Name);
                 Parameters.Parameter1.Value = actor.Parameters[0];
                 Parameters.Parameter2.Value = actor.Parameters[1];
@@ -115,6 +117,7 @@ namespace SampleMapEditor
                 Parameters.Parameter7.Value = actor.Parameters[6];
                 Parameters.Parameter8.Value = actor.Parameters[7];
                 StringParams = actor.Parameters;
+                Flags = actor.Switches;
             }
         }
 
@@ -310,7 +313,7 @@ namespace SampleMapEditor
                 ImGui.InputFloat3("Scale", ref actor.Scale);
             }
 
-            if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.Framed))
+            if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.DefaultOpen))
             {
                 ImGui.InputText(actor.Parameters.Parameter1.Name, ref actor.StringParams[0], 64);
                 ImGui.InputText(actor.Parameters.Parameter2.Name, ref actor.StringParams[1], 64);
@@ -320,6 +323,38 @@ namespace SampleMapEditor
                 ImGui.InputText(actor.Parameters.Parameter6.Name, ref actor.StringParams[5], 64);
                 ImGui.InputText(actor.Parameters.Parameter7.Name, ref actor.StringParams[6], 64);
                 ImGui.InputText(actor.Parameters.Parameter8.Name, ref actor.StringParams[7], 64);
+            }
+
+            if (ImGui.CollapsingHeader("Switches (Flags)", ImGuiTreeNodeFlags.DefaultOpen))
+            {
+                string[] items = new string[5] {
+                    "Local Flag",
+                    "Global Flag",
+                    "Hardcoded Value",
+                    "Panel Flag",
+                    "Unused"
+                };
+
+                ImGui.Combo("##Flag1Usage", ref actor.Flags[0].Usage, items, items.Length);
+                ImGui.SameLine();
+                ImGui.InputInt("##Flag1Index", ref actor.Flags[0].Index);
+
+                ImGui.Combo("##Flag2Usage", ref actor.Flags[1].Usage, items, items.Length);
+                ImGui.SameLine();
+                ImGui.InputInt("##Flag2Index", ref actor.Flags[1].Index);
+
+                ImGui.Combo("##Flag3Usage", ref actor.Flags[2].Usage, items, items.Length);
+                ImGui.SameLine();
+                ImGui.InputInt("##Flag3Index", ref actor.Flags[2].Index);
+
+                ImGui.Combo("##Flag4Usage", ref actor.Flags[3].Usage, items, items.Length);
+                ImGui.SameLine();
+                ImGui.InputInt("##Flag4Index", ref actor.Flags[3].Index);
+            }
+
+            if (ImGui.CollapsingHeader("Links", ImGuiTreeNodeFlags.DefaultOpen))
+            {
+
             }
         }
 

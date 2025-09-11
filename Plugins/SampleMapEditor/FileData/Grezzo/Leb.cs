@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,11 +16,13 @@ namespace SampleMapEditor.FileData.Grezzo
         public ushort ID;
         public ushort XE;
         public uint RoomID;
-        public float[] Position = new float[3];
-        public float[] Rotation = new float[3];
-        public float[] Scale = new float[3];
+        public Vector3 Position = Vector3.Zero;
+        public Vector3 Rotation = Vector3.Zero;
+        public Vector3 Scale = Vector3.One;
         public string[] Parameters = new string[8];
-        public List<Tuple<byte, ushort>> Switches = new List<Tuple<byte, ushort>>();
+        public ActorSwitch[] Switches = new ActorSwitch[4];
+        public List<ActorLink> Links = new List<ActorLink>();
+        public List<PointLink> Points = new List<PointLink>();
 
 
         public Actor(byte[] data, byte[] names)
@@ -55,8 +58,34 @@ namespace SampleMapEditor.FileData.Grezzo
             }
 
             for (int i = 0; i < 4; i++)
-                Switches.Add(new Tuple<byte, ushort>(FixedHash.ReadInt(data, 0x78 + i, 1), FixedHash.ReadInt(data, 0x7C + (2 * i), 2)));
+                Switches[i] = new ActorSwitch(i, FixedHash.ReadInt(data, 0x78 + i, 1), FixedHash.ReadInt(data, 0x7C + (2 * i), 2));
         }
+    }
+
+
+    public class ActorSwitch
+    {
+        public int Usage;
+        public int Index;
+
+        public ActorSwitch(int switchIndex, int usage, int index)
+        {
+            Usage = usage;
+            Index = index;
+        }
+    }
+
+
+    public class ActorLink
+    {
+        public ulong Hash;
+        public string[] Parameters = new string[2];
+    }
+
+
+    public class PointLink
+    {
+
     }
 
 

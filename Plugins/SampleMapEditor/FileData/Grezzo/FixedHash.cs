@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Numerics;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace SampleMapEditor.FileData.Grezzo
 {
@@ -136,12 +133,12 @@ namespace SampleMapEditor.FileData.Grezzo
             return BitConverter.ToSingle(data, (int)start);
         }
 
-        public static float[] ReadVector3(byte[] data, ulong start)
+        public static Vector3 ReadVector3(byte[] data, ulong start)
         {
-            float[] vector = new float[3];
-            vector[0] = ReadFloat(data, start);
-            vector[1] = ReadFloat(data, start + 4);
-            vector[2] = ReadFloat(data, start + 8);
+            Vector3 vector = new Vector3(
+                ReadFloat(data, start),
+                ReadFloat(data, start + 4),
+                ReadFloat(data, start + 8));
             return vector;
         }
         
