@@ -39,13 +39,24 @@ namespace SampleMapEditor
             if (IconManager.HasIcon(System.IO.Path.Combine(Runtime.ExecutableDir,"Lib","Images","MapObjects",$"{actor.Name}.png")))
                 icon = System.IO.Path.Combine(Runtime.ExecutableDir,"Lib","Images","MapObjects",$"{actor.Name}.png");
 
-            assets.Add(new MapObjectAsset($"MapObject_{actor.ID}")
+            MapObjectAsset asset = new MapObjectAsset($"MapObject_{actor.ID}")
             {
                 Name = actor.Name,
                 ObjID = actor.ID,
                 ObjDefinition = actor,
-                Icon = IconManager.GetTextureIcon(icon),
-            });
+                Icon = IconManager.GetTextureIcon(icon)
+            };
+
+            if (actor.Name.StartsWith("Enemy"))
+                asset.Categories = new string[] { "Enemies" };
+            else if (actor.Name.StartsWith("Item"))
+                asset.Categories = new string[] { "Items" };
+            else if (actor.Name.StartsWith("Npc"))
+                asset.Categories = new string[] { "NPCs" };
+            else if (actor.Name.StartsWith("Obj"))
+                asset.Categories = new string[] { "Objects" };
+
+            assets.Add(asset);
         }
 
         public bool UpdateFilterList()

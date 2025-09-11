@@ -305,7 +305,8 @@ namespace SampleMapEditor
             render.Transform.Position = position;
             render.Transform.Rotation = rotation;
             render.Transform.UpdateMatrix(true);
-            // render.UINode.IsSelected = true;
+            render.UINode.IsSelected = true;
+            currentObj = render.UINode;
             AddRender(render);
             // Scene.SelectionUIChanged?.Invoke(render.UINode, EventArgs.Empty);
 
