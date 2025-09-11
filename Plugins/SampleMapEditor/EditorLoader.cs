@@ -105,10 +105,7 @@ namespace SampleMapEditor
                 Position = new System.Numerics.Vector3(actor.Position[0], actor.Position[1], actor.Position[2]);
                 Rotation = new System.Numerics.Vector3(actor.Rotation[0], actor.Rotation[1], actor.Rotation[2]);
                 Scale = new System.Numerics.Vector3(actor.Scale[0], actor.Scale[1], actor.Scale[2]);
-                if (ParamDatabase.ParameterClasses.ContainsKey(Name))
-                    Parameters = ParamDatabase.ParameterClasses[Name];
-                else
-                    Parameters = new BaseParameters();
+                Parameters = ParamDatabase.GetParameterClass(Name);
                 Parameters.Parameter1.Value = actor.Parameters[0];
                 Parameters.Parameter2.Value = actor.Parameters[1];
                 Parameters.Parameter3.Value = actor.Parameters[2];
