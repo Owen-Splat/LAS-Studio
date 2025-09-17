@@ -1,5 +1,5 @@
-# Sample-Editor
-A sample project for making map editors with the map studio engine. 
+# LAS-Studio
+The go-to tool for making romhacks of Link's Awakening Switch! Currently just a level editor
 
 ## Libraries
 
