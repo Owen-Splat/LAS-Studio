@@ -131,7 +131,6 @@ namespace SampleMapEditor
             p1 = parameters[0];
             p2 = parameters[1];
             contentID = contents.FindIndex(0, contents.Count, x => x == p2);
-            Console.WriteLine($"ObjTreasureBox contentID: {contentID}");
             p3 = index;
             p4 = parameters[3];
             p5 = parameters[4];
