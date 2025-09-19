@@ -9,6 +9,7 @@ namespace SampleMapEditor
         new public string p1 = "Switch0";
         new public string p2 = "Rupee20";
         new public int p3 = -1;
+        new public int p4 = 0;
         private int contentID = -1;
         private List<string> contents = new List<string>()
         {
@@ -113,7 +114,7 @@ namespace SampleMapEditor
                 ImGui.InputText("##ItemCustom", ref p2, 64);
             }
             ImGui.InputInt("Index", ref p3);
-            ImGui.InputText("Parameter 4", ref p4, 64);
+            ImGui.Combo("Chest Type", ref p4, new string[] { "Default", "Locked", "Group" }, 3);
             ImGui.InputText("Parameter 5", ref p5, 64);
             ImGui.InputText("Parameter 6", ref p6, 64);
             ImGui.InputText("Parameter 7", ref p7, 64);
@@ -132,7 +133,13 @@ namespace SampleMapEditor
             p2 = parameters[1];
             contentID = contents.FindIndex(0, contents.Count, x => x == p2);
             p3 = index;
-            p4 = parameters[3];
+            int chestType = 0;
+            try
+            {
+                chestType = Convert.ToInt32(parameters[3]);
+            }
+            catch (FormatException) { }
+            p4 = chestType;
             p5 = parameters[4];
             p6 = parameters[5];
             p7 = parameters[6];
