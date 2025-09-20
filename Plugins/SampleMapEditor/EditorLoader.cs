@@ -286,10 +286,12 @@ namespace SampleMapEditor
             stream.Close();
 
             // Write leb files if the room has been edited (repack all of them for now)
-            foreach (var obj in MapObjList)
+            foreach (var node in Root.Children)
             {
-                Room room = obj.Key;
-                List<ActorObj> actors = obj.Value;
+                Room room = (Room)node.Tag;
+                List<ActorObj> actors = new List<ActorObj>();
+                foreach (var childNode in node.Children)
+                    actors.Add((ActorObj)childNode.Tag);
 
                 string fileName = $"{levelName}_{room.Name}.leb";
                 string filePath = $"{GlobalSettings.ModOutputPath}\\RomFS\\region_common\\level\\{levelName}\\{fileName}";
