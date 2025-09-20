@@ -126,7 +126,11 @@ namespace SampleMapEditor.FileData.Grezzo
             if (parameter.Contains('.') && float.TryParse(parameter, out pf))
                 return TypeCode.Single;
             else if (int.TryParse(parameter, out pi))
+            {
+                if (pi < 0)
+                    return TypeCode.Single;
                 return TypeCode.UInt32;
+            }
             else
                 return TypeCode.String;
         }
@@ -163,34 +167,34 @@ namespace SampleMapEditor.FileData.Grezzo
 
             for (int i = 0; i < 8; i++)
             {
-                object parameter = Parameters[i];
-                if (parameter is string)
+                string parameter = Parameters[i];
+                TypeCode code = GetParamType(parameter);
+                switch (code)
                 {
-                    packed.AddRange(FixedHash.GetBytes((uint)(nameRepr.Count + nameOffset)));
-                    packed.AddRange(FixedHash.GetBytes((uint)4));
-                    nameRepr.AddRange(FixedHash.GetBytes(parameter));
-                    nameRepr.Add(0);
+                    case TypeCode.Single:
+                        packed.AddRange(FixedHash.GetBytes(float.Parse(parameter)));
+                        packed.AddRange(FixedHash.GetBytes((uint)2));
+                        break;
+                    case TypeCode.UInt32:
+                        packed.AddRange(FixedHash.GetBytes(uint.Parse(parameter)));
+                        packed.AddRange(FixedHash.GetBytes((uint)3));
+                        break;
+                    default: // TypeCode.String:
+                        packed.AddRange(FixedHash.GetBytes((uint)(nameRepr.Count + nameOffset)));
+                        packed.AddRange(FixedHash.GetBytes((uint)4));
+                        nameRepr.AddRange(FixedHash.GetBytes(parameter));
+                        nameRepr.Add(0);
+                        break;
                 }
-                else if (parameter is float)
-                {
-                    packed.AddRange(FixedHash.GetBytes(parameter));
-                    packed.AddRange(FixedHash.GetBytes((uint)2));
-                }
-                else
-                {
-                    packed.AddRange(FixedHash.GetBytes(parameter));
-                    packed.AddRange(FixedHash.GetBytes((uint)3));
-                }
-
             }
 
             List<byte> switchesBytes = new List<byte>();
             for (int i = 0; i < 4; i++)
             {
-                packed.AddRange(FixedHash.GetBytes((byte)Switches[i].Usage));
+                packed.Add((byte)Switches[i].Usage);
                 switchesBytes.AddRange(FixedHash.GetBytes((ushort)Switches[i].Index));
             }
-            packed.AddRange(switchesBytes);
+            packed.AddRange(switchesBytes.ToArray());
 
             // relationship data here
             bool isEnemy = Name.StartsWith("Enemy");
@@ -199,9 +203,9 @@ namespace SampleMapEditor.FileData.Grezzo
             packed.AddRange(FixedHash.GetBytes(isEnemy));
             packed.AddRange(FixedHash.GetBytes(checkKills));
             packed.AddRange(FixedHash.GetBytes(isChamberEnemy));
-            packed.AddRange(FixedHash.GetBytes((byte)Links.Count));
-            packed.AddRange(FixedHash.GetBytes((byte)Refs.Count));
-            packed.AddRange(FixedHash.GetBytes((byte)Points.Count));
+            packed.Add((byte)Links.Count);
+            packed.Add((byte)Refs.Count);
+            packed.Add((byte)Points.Count);
             packed.AddRange(new byte[6] { 0, 0, 0, 0, 0, 0 });
 
             foreach (var link in Links)
@@ -372,14 +376,16 @@ namespace SampleMapEditor.FileData.Grezzo
 
     public class Room
     {
+        public string Name;
         public FixedHash Fixed;
         public uint ZoneID = 0;
         public List<Actor> Actors = new List<Actor>();
         public List<Vector3> Points = new List<Vector3>();
         public List<Rail> Rails = new List<Rail>();
 
-        public Room(byte[] data)
+        public Room(byte[] data, string name)
         {
+            Name = name;
             Fixed = new FixedHash(data);
             Entry actorEntry = new Entry();
             Entry pointEntry = new Entry();
@@ -418,6 +424,7 @@ namespace SampleMapEditor.FileData.Grezzo
             for (int i = 0; i < Actors.Count; i++)
                 foreach (var link in Actors[i].Links)
                 {
+                    Console.WriteLine(link.Hash);
                     var linkedActor = Actors.Where(x => x.Hash.ToString() == link.Hash).ToList()[0];
                     link.Hash = Actors.IndexOf(linkedActor).ToString();
                     linkedActor.Refs.Add((uint)i);
@@ -439,7 +446,7 @@ namespace SampleMapEditor.FileData.Grezzo
 
                         foreach (var parameter in actor.Parameters)
                         {
-                            if (parameter is string)
+                            if (Actor.GetParamType(parameter) == TypeCode.String)
                             {
                                 newNames.AddRange(FixedHash.GetBytes(parameter));
                                 newNames.Add(0);

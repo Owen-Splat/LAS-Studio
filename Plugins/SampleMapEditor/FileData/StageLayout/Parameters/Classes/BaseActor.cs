@@ -30,9 +30,9 @@ namespace SampleMapEditor
             ImGui.InputText("Parameter 8", ref p8, 64);
         }
 
-        public object[] GetParameters()
+        public string[] GetParameters()
         {
-            return new object[8]
+            return new string[8]
             {
                 ConvertParam(p1),
                 ConvertParam(p2),
@@ -60,25 +60,24 @@ namespace SampleMapEditor
         /// <summary>
         /// LEB Actor params can only be float, uint32, or string. We need to convert other types to these
         /// </summary>
-        public object ConvertParam(dynamic parameter)
+        public string ConvertParam(dynamic parameter)
         {
-            object actorParam;
+            string actorParam;
+
             if (parameter is int)
             {
                 if (parameter < 0)
                     actorParam = "";
                 else
-                    actorParam = (uint)parameter;
+                    actorParam = parameter.ToString();
             }
             else if (parameter is bool)
             {
-                if (parameter)
-                    actorParam = (uint)1;
-                else
-                    actorParam = (uint)0;
+                byte paramByte = parameter ? (byte)1 : (byte)0;
+                actorParam = paramByte.ToString();
             }
             else
-                actorParam = parameter;
+                actorParam = parameter.ToString();
 
             return actorParam;
         }

@@ -171,7 +171,7 @@ namespace SampleMapEditor
         }
 
 
-        public Dictionary<string, List<ActorObj>> MapObjList { get; set; } = new Dictionary<string, List<ActorObj>>();
+        public Dictionary<Room, List<ActorObj>> MapObjList { get; set; } = new Dictionary<Room, List<ActorObj>>();
         public List<ulong> HashList { get; set; } = new List<ulong>();
         public Random RNG { get; set; } = new Random();
 
@@ -203,7 +203,8 @@ namespace SampleMapEditor
 
 
         private NodeBase currentObj { get; set; }
-        private Level level;
+        private Level level { get; set; }
+        private string levelName { get; set; }
 
         /// <summary>
         /// Loads the given file data from a stream.
@@ -227,7 +228,7 @@ namespace SampleMapEditor
             GlobalSettings.LoadDatabases(); // Build ActorDatabase and RoomDatabase
             GlobalSettings.LoadTextures(); // Build TextureArchive
 
-            string levelName = FileInfo.FileName.Split('.')[0];
+            levelName = FileInfo.FileName.Split('.')[0];
             string levelFolder = $"{GlobalSettings.GamePath}\\region_common\\level\\{levelName}";
             string[] roomFiles = Directory.GetFiles(levelFolder);
             foreach (string roomFile in roomFiles)
@@ -239,7 +240,8 @@ namespace SampleMapEditor
 
                 string filePath = GetContentPath($"region_common\\level\\{levelName}\\{roomName}");
 
-                Room room = new Room(File.ReadAllBytes(filePath));
+                roomName = roomName.Split("_").Last().Split(".").First();
+                Room room = new Room(File.ReadAllBytes(filePath), roomName);
                 List<ActorObj> actors = new List<ActorObj>();
                 foreach (Actor actor in room.Actors)
                 {
@@ -248,8 +250,7 @@ namespace SampleMapEditor
                     HashList.Add(Convert.ToUInt64(obj.Hash));
                     actors.Add(obj);
                 }
-                roomName = roomName.Split("_").Last().Split(".").First();
-                MapObjList.Add(roomName, actors);
+                MapObjList.Add(room, actors);
             }
 
             //For this example I will show loading 3D objects into the scene
@@ -279,9 +280,21 @@ namespace SampleMapEditor
         /// </summary>
         public void Save(Stream stream)
         {
+            // Write to lvb stream first
             byte[] outData = level.Repack();
             stream.Write(outData, 0, outData.Length);
-            Console.WriteLine(stream.Length);
+            stream.Close();
+
+            // Write leb files if the room has been edited (repack all of them for now)
+            foreach (var obj in MapObjList)
+            {
+                Room room = obj.Key;
+                List<ActorObj> actors = obj.Value;
+
+                string fileName = $"{levelName}_{room.Name}.leb";
+                string filePath = $"{GlobalSettings.ModOutputPath}\\RomFS\\region_common\\level\\{levelName}\\{fileName}";
+                File.WriteAllBytes(filePath, room.Repack(actors));
+            }
         }
 
         //Extra overrides for FileEditor you can use for custom UI
@@ -622,8 +635,8 @@ namespace SampleMapEditor
             if (roomNode.Parent != Root)
                 roomNode = currentObj.Parent;
 
-            List<ActorObj> actors = MapObjList[roomNode.Header];
-            MapObjList[roomNode.Header].Add(actor);
+            List<ActorObj> actors = MapObjList[(Room)roomNode.Tag];
+            MapObjList[(Room)roomNode.Tag].Add(actor);
 
             // now add the render - same code from MapScene
             string modelPath = GetModelPathFromObject(actor);

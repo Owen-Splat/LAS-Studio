@@ -23,6 +23,20 @@ namespace SampleMapEditor
             ImGui.InputText("Parameter 8", ref p8, 64);
         }
 
+        new public string[] GetParameters()
+        {
+            return new string[8]
+            {
+                ConvertParam(p1),
+                ConvertParam(p2),
+                ConvertParam(p3),
+                ConvertParam(p4),
+                ConvertParam(p5),
+                ConvertParam(p6),
+                ConvertParam(p7),
+                ConvertParam(p8)
+            };
+        }
 
         new public void SetParameters(string[] parameters)
         {

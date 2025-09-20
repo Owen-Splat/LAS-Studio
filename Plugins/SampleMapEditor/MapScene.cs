@@ -35,9 +35,10 @@ namespace SampleMapEditor
         {
             foreach (var roomObj in loader.MapObjList)
             {
-                NodeBase roomFolder = new NodeBase(roomObj.Key);
+                NodeBase roomFolder = new NodeBase(roomObj.Key.Name);
                 roomFolder.Icon = IconManager.FOLDER_ICON.ToString();
                 roomFolder.HasCheckBox = true;
+                roomFolder.Tag = roomObj.Key;
                 loader.Root.AddChild(roomFolder);
 
                 foreach (var mapObj in roomObj.Value)

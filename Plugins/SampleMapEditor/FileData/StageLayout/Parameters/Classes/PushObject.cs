@@ -82,7 +82,7 @@ namespace SampleMapEditor
             ImGui.InputText("Parameter 8", ref p8, 64);
         }
 
-        new public object[] GetParameters()
+        new public string[] GetParameters()
         {
             int state1 = 0;
             if (p1)
@@ -116,7 +116,7 @@ namespace SampleMapEditor
                     state4 = 2;
             }
 
-            return new object[8]
+            return new string[8]
             {
                 ConvertParam(state1),
                 ConvertParam(state2),
