@@ -24,9 +24,6 @@ namespace SampleMapEditor
             //Prepare a collision caster for snapping objects onto
             SetupSceneCollision();
 
-            //Prepare Texture Archive
-            SetupTextures(loader);
-
             //Add some objects to the scene
             SetupObjects(loader);
         }
@@ -51,8 +48,8 @@ namespace SampleMapEditor
                         BfresRender o = new BfresRender(modelPath, roomFolder);
 
                         string modelPathName = modelPath.Split("\\").Last();
-                        if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
-                            o.Textures = loader.textureArchive;
+                        if (GlobalSettings.TextureArchive.ContainsKey(modelPathName.Split('_')[0]))
+                            o.Textures = GlobalSettings.TextureArchive[modelPathName.Split('_')[0]];
 
                         o.Models.ForEach(model =>
                         {
@@ -100,33 +97,6 @@ namespace SampleMapEditor
                         o.Transform.UpdateMatrix(true);
                         loader.AddRender(o);
                     }
-                }
-            }
-        }
-
-
-        private void SetupTextures(EditorLoader loader)
-        {
-            if (loader.FileInfo.FileName.StartsWith("Lv") || loader.FileInfo.FileName.StartsWith("Field"))
-            {
-                string levelName = loader.FileInfo.FileName.Split('.')[0];
-                string bntxPath = loader.GetTextureArchive(levelName);
-                BntxFile bntx = new BntxFile(bntxPath);
-                foreach (Texture tex in bntx.Textures)
-                {
-                    BntxTexture btex = new BntxTexture(bntx, tex);
-                    loader.textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
-                }
-            }
-            else if (loader.FileInfo.FileName.StartsWith("End") || loader.FileInfo.FileName == "KanaletCastle.lvb")
-            {
-                string levelName = "Field"; // The "Ending" level files just use the same Field map models
-                string bntxPath = loader.GetTextureArchive(levelName);
-                BntxFile bntx = new BntxFile(bntxPath);
-                foreach (Texture tex in bntx.Textures)
-                {
-                    BntxTexture btex = new BntxTexture(bntx, tex);
-                    loader.textureArchive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
                 }
             }
         }

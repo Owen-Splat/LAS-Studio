@@ -201,11 +201,6 @@ namespace SampleMapEditor
             return GetContentPath($"region_common\\actor\\{actor.ModelName}");
         }
 
-        public string GetTextureArchive(string levelName)
-        {
-            return GetContentPath($"region_common\\map\\{levelName}.bntx");
-        }
-
 
         private NodeBase currentObj { get; set; }
 
@@ -217,7 +212,8 @@ namespace SampleMapEditor
             if (!GlobalSettings.PathsValid)
                 return;
 
-            GlobalSettings.LoadDatabases(); // Parse Actordb
+            GlobalSettings.LoadDatabases(); // Build ActorDatabase and RoomDatabase
+            GlobalSettings.LoadTextures(); // Build TextureArchive
 
             string levelName = FileInfo.FileName.Split('.')[0];
             string levelFolder = $"{GlobalSettings.GamePath}\\region_common\\level\\{levelName}";
@@ -618,8 +614,8 @@ namespace SampleMapEditor
                 BfresRender o = new BfresRender(modelPath, roomNode);
 
                 string modelPathName = modelPath.Split("\\").Last();
-                if (modelPathName.StartsWith("Lv") || modelPathName.StartsWith("Field"))
-                    o.Textures = textureArchive;
+                if (GlobalSettings.TextureArchive.ContainsKey(modelPathName.Split('_')[0]))
+                    o.Textures = GlobalSettings.TextureArchive[modelPathName.Split('_')[0]];
 
                 o.Models.ForEach(model =>
                 {

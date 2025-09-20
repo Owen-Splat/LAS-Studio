@@ -1,5 +1,8 @@
+using CafeLibrary.Rendering;
+using GLFrameworkEngine;
 using Newtonsoft.Json;
 using OpenTK;
+using Syroot.NintenTools.NSW.Bntx;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +19,8 @@ namespace SampleMapEditor
         public static Dictionary<string, ActorDefinition> ActorDatabase = new Dictionary<string, ActorDefinition>();
 
         public static List<string> RoomDatabase = new List<string>();
+
+        public static Dictionary<string, Dictionary<string, GenericRenderer.TextureView>> TextureArchive = new Dictionary<string, Dictionary<string, GenericRenderer.TextureView>>();
 
         public static string GamePath { get; set; }
 
@@ -44,12 +49,51 @@ namespace SampleMapEditor
         }
 
         /// <summary>
+        /// Reads the bntx files from the romfs to build a texture archive
+        /// </summary>
+        public static void LoadTextures()
+        {
+            if (TextureArchive.Count != 0)
+                return;
+
+            Console.WriteLine("~ Called GlobalSettings.LoadTextures() ~");
+
+            string[] textureFiles = new string[]
+            {
+                "Field",
+                "Lv01TailCave",
+                "Lv02BottleGrotto",
+                "Lv03KeyCavern",
+                "Lv04AnglersTunnel",
+                "Lv05CatfishsMaw",
+                "Lv06FaceShrine",
+                "Lv07EagleTower",
+                "Lv08TurtleRock",
+                "Lv09WindFishsEgg",
+                "Lv10ClothesDungeon"
+            };
+
+            foreach (var textureFile in textureFiles)
+            {
+                string path = GetContentPath($"region_common\\map\\{textureFile}.bntx");
+                BntxFile bntx = new BntxFile(path);
+                var archive = new Dictionary<string, GenericRenderer.TextureView>();
+                foreach (Texture tex in bntx.Textures)
+                {
+                    BntxTexture btex = new BntxTexture(bntx, tex);
+                    archive.Add(btex.Name, new GenericRenderer.TextureView(btex) { OriginalSource = btex });
+                }
+                TextureArchive.Add(textureFile, archive);
+            }
+        }
+
+        /// <summary>
         /// Gets content path from either the update, game, or aoc directories based on what is present.
         /// </summary>
         public static string GetContentPath(string relativePath)
         {
             //Update first then base package.
-            if (File.Exists($"{ModOutputPath}\\{relativePath}")) return $"{ModOutputPath}\\{relativePath}";
+            if (File.Exists($"{ModOutputPath}\\RomFS\\{relativePath}")) return $"{ModOutputPath}\\RomFS\\{relativePath}";
             if (File.Exists($"{GamePath}\\{relativePath}")) return $"{GamePath}\\{relativePath}";
 
             return relativePath;
