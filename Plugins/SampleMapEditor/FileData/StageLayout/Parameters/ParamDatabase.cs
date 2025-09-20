@@ -15,6 +15,8 @@ namespace SampleMapEditor
                     return new PushableObjectParams();
                 case "ItemHeartPiece" or "ItemSecretSeashell":
                     return new ItemParameters();
+                case "MapStatic":
+                    return new MapStaticParameters();
                 default:
                     return new BaseParameters();
             }

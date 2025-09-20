@@ -5,6 +5,8 @@ namespace SampleMapEditor
 {
     public class BaseParameters
     {
+        public EditorLoader loader; // Since we call DrawParameters in each object, they may need to reference the loader
+
         // EditorLoader does not care about any variables, it will only call the functions
         // These still need to be public for the inherited classes to use
         public string p1 = "";

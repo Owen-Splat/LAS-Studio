@@ -152,7 +152,7 @@ namespace SampleMapEditor
                 ModelName = definition.Model;
                 var newParameters = ParamDatabase.GetParameterClass(Name);
                 if (Parameters.GetType() != newParameters.GetType())
-                    Parameters = ParamDatabase.GetParameterClass(Name);
+                    Parameters = newParameters;
             }
 
             public class ObjPointLink
@@ -236,6 +236,7 @@ namespace SampleMapEditor
                 foreach (Actor actor in room.Actors)
                 {
                     ActorObj obj = new ActorObj(room, actor);
+                    obj.Parameters.loader = this;
                     HashList.Add(Convert.ToUInt64(obj.Hash));
                     actors.Add(obj);
                 }
@@ -328,7 +329,9 @@ namespace SampleMapEditor
             position.Z = (float)Math.Round(position.Z / (unit_size / 2)) * (unit_size / 2);
 
             // Add the object
-            EditableObject render = AddObject(new ActorObj(asset.ObjDefinition));
+            var obj = new ActorObj(asset.ObjDefinition);
+            obj.Parameters.loader = this;
+            EditableObject render = AddObject(obj);
             render.Transform.Position = position;
             render.Transform.UpdateMatrix(true);
             render.UINode.IsSelected = true;
@@ -434,7 +437,7 @@ namespace SampleMapEditor
                 ImGui.InputText("Type", ref actor.Name, 64, ImGuiInputTextFlags.ReadOnly);
                 ImGui.SameLine();
                 if (ImGui.Button(IconManager.EDIT_ICON.ToString() + "##TypeEditButton", buttonIconSize))
-                    EditCurrentObj();
+                    ChangeObj();
             }
 
             if (ImGui.CollapsingHeader("Parameters", ImGuiTreeNodeFlags.DefaultOpen))
@@ -511,7 +514,7 @@ namespace SampleMapEditor
                     ImGui.InputText($"##PointParameter2{i}", ref point.Parameters[1], 64);
 
                     ImGui.PopItemWidth();
-                    ImGui.Separator();                    
+                    ImGui.Separator();
                 }
                 if (ImGui.Button(IconManager.ADD_ICON.ToString() + "##PointAddButton", buttonIconSize))
                     actor.Points.Add(new ActorObj.ObjPointLink());
@@ -667,13 +670,13 @@ namespace SampleMapEditor
         }
 
 
-        public void DuplicateCurrentObj()
+        public void DuplicateObj()
         {
 
         }
 
 
-        public void DeleteCurrentObj()
+        public void DeleteObj()
         {
 
         }
@@ -682,7 +685,7 @@ namespace SampleMapEditor
         /// <summary>
         /// Edits the Actor Type of the currently selected actor
         /// </summary>
-        public void EditCurrentObj()
+        public void ChangeObj()
         {
             var selected = Scene.GetSelected().ToList();
             if (selected.Count == 0)
@@ -699,35 +702,57 @@ namespace SampleMapEditor
                 if (!result || string.IsNullOrEmpty(newName))
                     return;
 
-                foreach (EditableObject obj in selected)
+                foreach (EditableObject render in selected)
                 {
-                    var render = obj;
-                    var parentNode = render.ParentUINode;
-                    int index = render.UINode.Index;
-
                     ActorObj actor = (ActorObj)render.UINode.Tag;
                     actor.Change(GlobalSettings.ActorDatabase[newName]);
-                    EditableObject newRender = AddObject(actor, generateHash: false); // keep hash to avoid breaking links
-                    newRender.Transform.Position = GetObjPos(actor);
-                    newRender.Transform.RotationEulerDegrees = GetObjRotation(actor);
-                    newRender.Transform.Scale = GetObjScale(actor);
-                    newRender.Transform.UpdateMatrix(true);
-                    newRender.UINode.IsSelected = true;
-                    currentObj = newRender.UINode;
-
-                    RemoveRender(render);
-                    Root.Children.Remove(render.UINode);
-                    GLContext.ActiveContext.TransformTools.RemoveTransform(render);
-
-                    AddRender(newRender);
-                    parentNode.Children.Move(parentNode.Children.Count - 1, index);
-                    Scene.SelectionUIChanged?.Invoke(newRender.UINode, EventArgs.Empty);
-                    GLContext.ActiveContext.TransformTools.InitAction(new List<ITransformableObject>() {newRender});
-
-                    //Update the SRT tool if active
-                    GLContext.ActiveContext.UpdateViewport = true;
+                    EditObj(render, actor, generateHash: false); // keep hash to avoid breaking links
                 }
             });
+        }
+
+        /// <summary>
+        /// Redraws all the selected objects
+        /// </summary>
+        public void UpdateObj()
+        {
+            var selected = Scene.GetSelected().ToList();
+            if (selected.Count == 0)
+                return;
+
+            foreach (EditableObject render in selected)
+                EditObj(render, (ActorObj)render.UINode.Tag, generateHash: false); // keep hash
+        }
+
+
+        /// <summary>
+        /// Edits the render to become the given ActorObj
+        /// This is done by deleting the old render and creating a new one in its place
+        /// </summary>
+        public void EditObj(EditableObject render, ActorObj actor, bool generateHash)
+        {
+            var parentNode = render.ParentUINode;
+            int index = render.UINode.Index;
+
+            EditableObject newRender = AddObject(actor, generateHash);
+            newRender.Transform.Position = GetObjPos(actor);
+            newRender.Transform.RotationEulerDegrees = GetObjRotation(actor);
+            newRender.Transform.Scale = GetObjScale(actor);
+            newRender.Transform.UpdateMatrix(true);
+            newRender.UINode.IsSelected = true;
+            currentObj = newRender.UINode;
+
+            RemoveRender(render);
+            Root.Children.Remove(render.UINode);
+            GLContext.ActiveContext.TransformTools.RemoveTransform(render);
+
+            AddRender(newRender);
+            parentNode.Children.Move(parentNode.Children.Count - 1, index);
+            Scene.SelectionUIChanged?.Invoke(newRender.UINode, EventArgs.Empty);
+            GLContext.ActiveContext.TransformTools.InitAction(new List<ITransformableObject>() { newRender });
+
+            //Update the SRT tool if active
+            GLContext.ActiveContext.UpdateViewport = true;
         }
     }
 }
