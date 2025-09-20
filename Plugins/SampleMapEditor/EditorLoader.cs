@@ -203,6 +203,7 @@ namespace SampleMapEditor
 
 
         private NodeBase currentObj { get; set; }
+        private Level level;
 
         /// <summary>
         /// Loads the given file data from a stream.
@@ -211,6 +212,17 @@ namespace SampleMapEditor
         {
             if (!GlobalSettings.PathsValid)
                 return;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                level = new Level(memoryStream.ToArray());
+            }
+            Root.Tag = level;
+            Root.TagUI.UIDrawer += delegate
+            {
+                DrawLevelProperties();
+            };
 
             GlobalSettings.LoadDatabases(); // Build ActorDatabase and RoomDatabase
             GlobalSettings.LoadTextures(); // Build TextureArchive
@@ -244,11 +256,6 @@ namespace SampleMapEditor
             MapScene mapScene = new MapScene();
             mapScene.Setup(this);
 
-            Root.TagUI.UIDrawer += delegate
-            {
-                DrawLevelProperties();
-            };
-
             Workspace.Outliner.SelectionChanged += (o, e) =>
             {
                 // Set currentObj to the outliner selected node
@@ -272,7 +279,9 @@ namespace SampleMapEditor
         /// </summary>
         public void Save(Stream stream)
         {
-
+            byte[] outData = level.Repack();
+            stream.Write(outData, 0, outData.Length);
+            Console.WriteLine(stream.Length);
         }
 
         //Extra overrides for FileEditor you can use for custom UI
@@ -520,13 +529,22 @@ namespace SampleMapEditor
 
         public void DrawLevelProperties()
         {
-            // ImGui.InputText("Level Name", ref n)
+            string[] typeNames = new string[5]
+            {
+                "Default",
+                "Shop",
+                "House",
+                "Overworld",
+                "Ending"
+            };
+            ImGui.Combo("Level Type", ref level.Config.LevelType, typeNames, typeNames.Length);
+            ImGui.Checkbox("Allow Companions", ref level.Config.AllowCompanions);
         }
 
 
         public override void DrawHelpWindow()
         {
-            if (ImGuiNET.ImGui.CollapsingHeader("Camera", ImGuiNET.ImGuiTreeNodeFlags.DefaultOpen))
+            if (ImGui.CollapsingHeader("Camera", ImGuiNET.ImGuiTreeNodeFlags.DefaultOpen))
             {
                 ImGuiHelper.BoldTextLabel("WASD", "Move camera");
                 ImGuiHelper.BoldTextLabel("Spacebar", "Move up");

@@ -135,7 +135,7 @@ namespace SampleMapEditor.FileData.Grezzo
                 entryOffsetsSect.AddRange(GetBytes((uint)(i * 0x10)));
 
                 if (entry.NodeIndex <= 0xFFED)
-                    dataSect.AddRange(entry.Data.ToBinary(dataSect.Count)); // entry Data is another FixedHash so call ToBinary()
+                    dataSect.AddRange(entry.Data.ToBinary((ulong)dataSect.Count)); // entry Data is another FixedHash so call ToBinary()
                 else if (entry.NodeIndex >= 0xFFF0) // entry Data is byte[] so add it directly
                 {
                     dataSect.AddRange(GetBytes((ulong)entry.Data.Length));
@@ -154,30 +154,48 @@ namespace SampleMapEditor.FileData.Grezzo
             List<byte> result = new List<byte>();
             result.AddRange(intro);
 
-            while ((ulong)result.Count + offset % 8 != 0)
+            while (((ulong)result.Count + offset) % 8 != 0)
                 result.Add(0);
             result.AddRange(entriesSect);
 
-            while ((ulong)result.Count + offset % 8 != 0)
+            while (((ulong)result.Count + offset) % 8 != 0)
                 result.Add(0);
             result.AddRange(entryOffsetsSect);
 
-            while ((ulong)result.Count + offset % 8 != 0)
+            while (((ulong)result.Count + offset) % 8 != 0)
                 result.Add(0);
             result.AddRange(dataSect);
 
-            while ((ulong)result.Count + offset % 4 != 0)
+            while (((ulong)result.Count + offset) % 4 != 0)
                 result.Add(0);
-            result.AddRange(GetBytes(NamesSection.Length));
+            result.AddRange(GetBytes((uint)NamesSection.Length));
             result.AddRange(NamesSection);
 
             return result.ToArray();
         }
 
 
-        public static byte[] GetBytes(dynamic value)
+        public static byte[] GetBytes(object value)
         {
-            byte[] data = BitConverter.GetBytes(value);
+            byte[] data;
+
+            if (value is string)
+                data = Encoding.ASCII.GetBytes((string)value);
+            else if (value is ushort)
+                data = BitConverter.GetBytes((ushort)value);
+            else if (value is uint)
+                data = BitConverter.GetBytes((uint)value);
+            else if (value is ulong)
+                data = BitConverter.GetBytes((ulong)value);
+            else if (value is float)
+                data = BitConverter.GetBytes((float)value);
+            else if (value is bool)
+                data = BitConverter.GetBytes((bool)value);
+            else
+            {
+                throw new Exception($"FixedHash.GetBytes unknown value: {value.GetType()}");
+            }
+
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(data);
             return data;
