@@ -215,6 +215,7 @@ namespace SampleMapEditor
         private NodeBase currentObj { get; set; }
         private Level level { get; set; }
         private string levelName { get; set; }
+        private byte[] levelBytes { get; set; }
 
         /// <summary>
         /// Loads the given file data from a stream.
@@ -227,13 +228,14 @@ namespace SampleMapEditor
             using (var memoryStream = new MemoryStream())
             {
                 stream.CopyTo(memoryStream);
-                level = new Level(memoryStream.ToArray());
+                levelBytes = memoryStream.ToArray();
+                // level = new Level(memoryStream.ToArray());
             }
-            Root.Tag = level;
-            Root.TagUI.UIDrawer += delegate
-            {
-                DrawLevelProperties();
-            };
+            // Root.Tag = level;
+            // Root.TagUI.UIDrawer += delegate
+            // {
+            //     DrawLevelProperties();
+            // };
 
             GlobalSettings.LoadDatabases(); // Build ActorDatabase and RoomDatabase
             GlobalSettings.LoadTextures(); // Build TextureArchive
@@ -290,10 +292,13 @@ namespace SampleMapEditor
         /// </summary>
         public void Save(Stream stream)
         {
-            // Write to lvb stream first
-            byte[] outData = level.Repack();
-            stream.Write(outData, 0, outData.Length);
+            stream.Write(levelBytes, 0, levelBytes.Length);
             stream.Close();
+
+            // Write to lvb stream first
+            // byte[] outData = level.Repack();
+            // stream.Write(outData, 0, outData.Length);
+            // stream.Close();
 
             // Write leb files if the room has been edited (repack all of them for now)
             foreach (var node in Root.Children)
