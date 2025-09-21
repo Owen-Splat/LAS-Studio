@@ -505,6 +505,26 @@
     },
     "MapObject_ObjEyegoreFigure": {
       "Categories": []
+    },
+    "MapObject_ObjOrangeUnevenSwitch": {
+      "Categories": [
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjPurpleQuartz": {
+      "Categories": [
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjPurpleUnevenSwitch": {
+      "Categories": [
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjTreasureBox": {
+      "Categories": [
+        "Favorites"
+      ]
     }
   }
 }
