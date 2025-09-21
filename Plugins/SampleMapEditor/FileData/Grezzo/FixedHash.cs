@@ -52,11 +52,11 @@ namespace SampleMapEditor.FileData.Grezzo
 
         public FixedHash(byte[] data, ulong offset=0)
         {
-            // Magic = ReadInt(data, offset, 1);
-            // Version = ReadInt(data, offset + 0x1, 1);
+            Magic = ReadInt(data, offset, 1);
+            Version = ReadInt(data, offset + 0x1, 1);
             NumBuckets = ReadInt(data, offset + 0x2, 2);
             NumNodes = ReadInt(data, offset + 0x4, 2);
-            // X6 = ReadInt(data, offset + 0x6, 2);
+            X6 = ReadInt(data, offset + 0x6, 2);
 
             for (ulong i = 0; i < NumBuckets; i++)
                 Buckets.Add(ReadInt(data, offset + 0x8 + (i * 4), 4));
@@ -78,7 +78,7 @@ namespace SampleMapEditor.FileData.Grezzo
                 ulong currentOffset = entriesOffset + (i * 0x10);
 
                 ushort nodeIndex = ReadInt(data, currentOffset, 2);
-                uint nextOffset = ReadInt(data, currentOffset + 2, 4);
+                uint nextOffset = ReadInt(data, currentOffset + 8, 4);
 
                 string name = "";
                 if (namesSize > 0)
@@ -128,7 +128,7 @@ namespace SampleMapEditor.FileData.Grezzo
                     entriesSect.AddRange(GetBytes((ushort)subIndex));
                 else
                     entriesSect.AddRange(new byte[] { 0, 0 });
-                entriesSect.AddRange(GetBytes(HashString(GetBytes(entry.Name))));
+                entriesSect.AddRange(GetBytes(HashString(entry.Name)));
                 entriesSect.AddRange(GetBytes(entry.NextOffset));
                 entriesSect.AddRange(GetBytes((uint)dataSect.Count));
 
@@ -140,10 +140,12 @@ namespace SampleMapEditor.FileData.Grezzo
                 {
                     dataSect.AddRange(GetBytes((ulong)entry.Data.Length));
                     dataSect.AddRange(entry.Data);
-                    dataSect.AddRange(new byte[7] { 0, 0, 0, 0, 0, 0, 0 });
-                    int maxSize = dataSect.Count & -8;
-                    int extraCount = dataSect.Count - maxSize;
-                    dataSect.RemoveRange(maxSize - 1, extraCount);
+                    while (dataSect.Count % 8 != 0)
+                        dataSect.Add(0);
+                    // dataSect.AddRange(new byte[7] { 0, 0, 0, 0, 0, 0, 0 });
+                    // int maxSize = dataSect.Count & -8;
+                    // int extraCount = dataSect.Count - maxSize;
+                    // dataSect.RemoveRange(maxSize - 1, extraCount);
                 }
                 else
                     throw new ArgumentException("Invalid node index");
@@ -180,7 +182,7 @@ namespace SampleMapEditor.FileData.Grezzo
             byte[] data;
 
             if (value is string)
-                data = Encoding.ASCII.GetBytes((string)value);
+                data = Encoding.UTF8.GetBytes((string)value);
             else if (value is ushort)
                 data = BitConverter.GetBytes((ushort)value);
             else if (value is uint)
@@ -265,18 +267,13 @@ namespace SampleMapEditor.FileData.Grezzo
             return result;
         }
 
-        public uint HashString(byte[] s)
+        public uint HashString(string s)
         {
             List<byte> data = new List<byte>();
-            data.AddRange(s);
-            data.Add(0);
+            data.AddRange(GetBytes(s));
             uint h = 0;
-            int i = 0;
-            while (data[i] != 0)
-            {
+            for (int i = 0; i < data.Count; i++)
                 h ^= (data[i] + (h >> 2) + (h << 5)) & 0xFFFFFFFF;
-                i++;
-            }
             return h;
         }
     }
