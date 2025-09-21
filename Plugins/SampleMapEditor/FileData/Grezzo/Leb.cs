@@ -75,7 +75,6 @@ namespace SampleMapEditor.FileData.Grezzo
             Scale = obj.Scale;
             Parameters = obj.Parameters.GetParameters();
             Switches = obj.Flags;
-            Links = obj.Links;
 
             // Add each point to the room first so we can index to them
             List<Vector3> points = new List<Vector3>();
@@ -252,7 +251,7 @@ namespace SampleMapEditor.FileData.Grezzo
                         break;
                 }
 
-                packed.AddRange(FixedHash.GetBytes(uint.Parse(link.Hash)));
+                packed.AddRange(FixedHash.GetBytes((uint)link.Index));
             }
 
             foreach (var point in Points)
@@ -325,12 +324,12 @@ namespace SampleMapEditor.FileData.Grezzo
 
     public class ActorLink
     {
-        public string Hash = ""; // This is actually index, but storing as Hash is easier, index is determined when saving
+        public int Index = 0;
         public string[] Parameters = new string[2] { "", "" };
 
         public ActorLink(uint index, string[] parameters)
         {
-            Hash = index.ToString();
+            Index = (int)index;
             Parameters = parameters;
         }
 
@@ -420,15 +419,32 @@ namespace SampleMapEditor.FileData.Grezzo
             Points.Clear();
             Actors.Clear();
             foreach (var obj in objList)
-                Actors.Add(new Actor(obj, this));
+            {
+                var actor = new Actor(obj, this);
+                foreach (var link in obj.Links)
+                {
+                    var linkedActors = objList.Where(x => x.Hash == link.Hash).ToList();
+                    if (linkedActors.Count == 0)
+                    {
+                        obj.Links.Remove(link);
+                        continue;
+                    }
+                    ActorLink newLink = new ActorLink();
+                    var linkedActor = linkedActors[0];
+                    newLink.Index = objList.IndexOf(linkedActor);
+                    newLink.Parameters = link.Parameters;
+                    actor.Links.Add(newLink);
+                }
+                Actors.Add(actor);
+            }
             for (int i = 0; i < Actors.Count; i++)
+            {
                 foreach (var link in Actors[i].Links)
                 {
-                    Console.WriteLine(link.Hash);
-                    var linkedActor = Actors.Where(x => x.Hash.ToString() == link.Hash).ToList()[0];
-                    link.Hash = Actors.IndexOf(linkedActor).ToString();
+                    var linkedActor = Actors[link.Index];
                     linkedActor.Refs.Add((uint)i);
                 }
+            }
 
             List<byte> newNames = new List<byte>();
 

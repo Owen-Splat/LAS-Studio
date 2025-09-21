@@ -89,7 +89,7 @@ namespace SampleMapEditor
                 new(4, 0),
                 new(4, 0)
             };
-            public List<ActorLink> Links = new List<ActorLink>();
+            public List<ObjLink> Links = new List<ObjLink>();
             public List<ObjPointLink> Points = new List<ObjPointLink>();
 
             public ActorObj(ActorObj actor)
@@ -120,12 +120,8 @@ namespace SampleMapEditor
                 Parameters = ParamDatabase.GetParameterClass(Name);
                 Parameters.SetParameters(actor.Parameters);
                 Flags = actor.Switches;
-                Links = actor.Links;
-                foreach (ActorLink link in Links)
-                {
-                    int actorIndex = int.Parse(link.Hash);
-                    link.Hash = room.Actors[actorIndex].Hash.ToString();
-                }
+                foreach (ActorLink link in actor.Links)
+                    Links.Add(new ObjLink(room.Actors[link.Index].Hash, link.Parameters));
                 foreach (PointLink point in actor.Points)
                     Points.Add(new ObjPointLink(room.Points[point.PointIndex], point.Parameters));
             }
@@ -153,6 +149,20 @@ namespace SampleMapEditor
                 var newParameters = ParamDatabase.GetParameterClass(Name);
                 if (Parameters.GetType() != newParameters.GetType())
                     Parameters = newParameters;
+            }
+
+            public class ObjLink
+            {
+                public string Hash = "";
+                public string[] Parameters = new string[2] { "", "" };
+
+                public ObjLink(ulong hash, string[] parameters)
+                {
+                    Hash = hash.ToString();
+                    Parameters = parameters;
+                }
+
+                public ObjLink() { }
             }
 
             public class ObjPointLink
@@ -514,7 +524,7 @@ namespace SampleMapEditor
                     ImGui.Separator();
                 }
                 if (ImGui.Button(IconManager.ADD_ICON.ToString() + "##LinkAddButton", buttonIconSize))
-                    actor.Links.Add(new ActorLink());
+                    actor.Links.Add(new ActorObj.ObjLink());
             }
 
             if (ImGui.CollapsingHeader("Points", ImGuiTreeNodeFlags.DefaultOpen))
