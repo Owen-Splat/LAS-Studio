@@ -1,2 +1,4 @@
+Version 0.1.1
+BUG: Fixed an issue where the program would freeze up while saving.
 Version 0.1.0
-Initial release. Basic object viewing & editing support.
+ADDITION: Initial release. Basic object viewing & editing support.

@@ -16,7 +16,7 @@ namespace MapStudio
 
         public override ImGuiWindowFlags Flags => ImGuiWindowFlags.NoDocking;
 
-        public static string AppVersion = "0.1.0";
+        public static string AppVersion = "0.1.1";
         string[] ChangeLog;
         string[] ChangeType;
 

@@ -148,7 +148,7 @@ namespace SampleMapEditor.FileData.Grezzo
 
             string hashHex = Hash.ToString("X");
             while (hashHex.Length < 16)
-                hashHex.Insert(0, "0");
+                hashHex = hashHex.Insert(0, "0");
             Name = $"Actor-{hashHex}";
             nameRepr.AddRange(FixedHash.GetBytes(Name));
             nameRepr.Add(0);
@@ -501,55 +501,55 @@ namespace SampleMapEditor.FileData.Grezzo
                         entry.Data.Entries.Add(new Entry(0xFFF2, "", 0xFFFFFFFF, rail.Repack()));
                 }
                 if (entry.Name == "actor")
+                {
+                    entry.Data.Entries = new List<Entry>();
+
+                    foreach (var actor in Actors)
                     {
-                        entry.Data.Entries = new List<Entry>();
+                        entry.Data.Entries.Add(new Entry(0xFFF0, "", 0xFFFFFFFF, actor.Repack((uint)newNames.Count)));
+                        newNames.AddRange(FixedHash.GetBytes(actor.Name));
+                        newNames.Add(0);
 
-                        foreach (var actor in Actors)
+                        foreach (var parameter in actor.Parameters)
                         {
-                            entry.Data.Entries.Add(new Entry(0xFFF0, "", 0xFFFFFFFF, actor.Repack((uint)newNames.Count)));
-                            newNames.AddRange(FixedHash.GetBytes(actor.Name));
-                            newNames.Add(0);
-
-                            foreach (var parameter in actor.Parameters)
+                            if (Actor.GetParamType(parameter) == TypeCode.String)
                             {
-                                if (Actor.GetParamType(parameter) == TypeCode.String)
-                                {
-                                    newNames.AddRange(FixedHash.GetBytes(parameter));
-                                    newNames.Add(0);
-                                }
+                                newNames.AddRange(FixedHash.GetBytes(parameter));
+                                newNames.Add(0);
                             }
-                            foreach (var link in actor.Links)
+                        }
+                        foreach (var link in actor.Links)
+                        {
+                            string param1 = link.Parameters[0];
+                            string param2 = link.Parameters[1];
+                            if (Actor.GetParamType(param1) == TypeCode.String)
                             {
-                                string param1 = link.Parameters[0];
-                                string param2 = link.Parameters[1];
-                                if (Actor.GetParamType(param1) == TypeCode.String)
-                                {
-                                    newNames.AddRange(FixedHash.GetBytes(param1));
-                                    newNames.Add(0);
-                                }
-                                if (Actor.GetParamType(param2) == TypeCode.String)
-                                {
-                                    newNames.AddRange(FixedHash.GetBytes(param2));
-                                    newNames.Add(0);
-                                }
+                                newNames.AddRange(FixedHash.GetBytes(param1));
+                                newNames.Add(0);
                             }
-                            foreach (var point in actor.Points)
+                            if (Actor.GetParamType(param2) == TypeCode.String)
                             {
-                                string param1 = point.Parameters[0];
-                                string param2 = point.Parameters[1];
-                                if (Actor.GetParamType(param1) == TypeCode.String)
-                                {
-                                    newNames.AddRange(FixedHash.GetBytes(param1));
-                                    newNames.Add(0);
-                                }
-                                if (Actor.GetParamType(param2) == TypeCode.String)
-                                {
-                                    newNames.AddRange(FixedHash.GetBytes(param2));
-                                    newNames.Add(0);
-                                }
+                                newNames.AddRange(FixedHash.GetBytes(param2));
+                                newNames.Add(0);
+                            }
+                        }
+                        foreach (var point in actor.Points)
+                        {
+                            string param1 = point.Parameters[0];
+                            string param2 = point.Parameters[1];
+                            if (Actor.GetParamType(param1) == TypeCode.String)
+                            {
+                                newNames.AddRange(FixedHash.GetBytes(param1));
+                                newNames.Add(0);
+                            }
+                            if (Actor.GetParamType(param2) == TypeCode.String)
+                            {
+                                newNames.AddRange(FixedHash.GetBytes(param2));
+                                newNames.Add(0);
                             }
                         }
                     }
+                }
 
                 newNames.AddRange(FixedHash.GetBytes(entry.Name));
                 newNames.Add(0);
