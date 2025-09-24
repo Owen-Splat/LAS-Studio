@@ -545,6 +545,12 @@
         "Favorites"
       ]
     },
+    "MapObject_ObjRock": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
     "MapObject_ObjSignboard": {
       "Categories": [
         "Objects",
