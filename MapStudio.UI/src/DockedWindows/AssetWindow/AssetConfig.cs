@@ -19,11 +19,11 @@ namespace MapStudio.UI
                 Settings.Add(item.ID, new AssetSettings());
 
             if (!item.Favorited)
-                item.Categories = new string[0];
+                item.Categories.Remove("Favorites");
             else
-                item.Categories = new string[] { "Favorites" };
+                item.Categories.Add("Favorites");
 
-            Settings[item.ID].Categories = item.Categories;
+            Settings[item.ID].Categories = item.Categories.ToArray();
             this.Save();
         }
 
@@ -33,7 +33,7 @@ namespace MapStudio.UI
                 return;
 
             var settings = Settings[item.ID];
-            item.Categories = settings.Categories;
+            item.Categories = settings.Categories.ToList();
             if (item.Categories.Contains("Favorites"))
                 item.Favorited = true;
         }

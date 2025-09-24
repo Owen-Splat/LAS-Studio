@@ -48,13 +48,13 @@ namespace SampleMapEditor
             };
 
             if (actor.Name.StartsWith("Enemy"))
-                asset.Categories = new string[] { "Enemies" };
+                asset.Categories.Add("Enemies");
             else if (actor.Name.StartsWith("Item"))
-                asset.Categories = new string[] { "Items" };
+                asset.Categories.Add("Items");
             else if (actor.Name.StartsWith("Npc"))
-                asset.Categories = new string[] { "NPCs" };
+                asset.Categories.Add("NPCs");
             else if (actor.Name.StartsWith("Obj"))
-                asset.Categories = new string[] { "Objects" };
+                asset.Categories.Add("Objects");
 
             assets.Add(asset);
         }

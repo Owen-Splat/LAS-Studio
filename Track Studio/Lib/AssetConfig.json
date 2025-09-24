@@ -1,528 +1,577 @@
 {
   "IconSize": 130.465,
   "Settings": {
-    "MapObject_EnemyZolRed": {
+    "MapObject_EnemyArmosDark": {
       "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyZolGreen": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyTail": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyTogezo": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStalKnightSword": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStalKnightSpear": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyTeresa": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyTektight": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyWizzrobe": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyVireChild": {
-      "Categories": []
-    },
-    "MapObject_EnemyVire": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyVegas": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyZombie": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyZora": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyZoroZoro": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStretchyGhostBlue": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStretchyGhostGreen": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStretchyGhostRed": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStalfosOrange": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyStalfosGreen": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemySpark": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemySoldierSword": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemySoldierSpear": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemySoldierIronBall": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemySeaUrchin": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyRope": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPincer": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPokey": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPiranha": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPolsVoice": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPukuPuku": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPeese": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPeahat": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPawn": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyPakkun": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyOctorok": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyMoriblinSword": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyMoriblinSpear": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyMonea": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyMoblinSword": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyMoblinSpear": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyMimic": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyLikeLike": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyLeever": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKyune": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKyorobo": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKuribo": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKirby": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKeese": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKarakoroRed": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKarakoroGreen": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyKarakoroBlue": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyHover": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyHiploop": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyHidy": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyHeiho": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyGibdos": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyGhini": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyGiantBubble": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyGesso": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyFlyingOctorok": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyCrowly": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyCreepee": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBuzzBlob": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBubble": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBonePutterBounce": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBonePutter": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBombKnuckle": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBomberRed": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBomberGreen": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_EnemyBallerine": {
-      "Categories": [
+        "Enemies",
         "Favorites"
       ]
     },
     "MapObject_EnemyArmosLight": {
       "Categories": [
+        "Enemies",
         "Favorites"
       ]
     },
-    "MapObject_EnemyArmosDark": {
+    "MapObject_EnemyBallerine": {
       "Categories": [
+        "Enemies",
         "Favorites"
       ]
     },
-    "MapObject_EnemyAnaMonea": {
+    "MapObject_EnemyBomberGreen": {
       "Categories": [
+        "Enemies",
         "Favorites"
       ]
     },
-    "MapObject_NpcBowWow": {
-      "Categories": []
+    "MapObject_EnemyBomberRed": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
     },
-    "MapObject_NpcChefBear": {
-      "Categories": []
+    "MapObject_EnemyBonePutter": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
     },
-    "MapObject_NpcChristine": {
-      "Categories": []
+    "MapObject_EnemyBonePutterBounce": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
     },
-    "MapObject_NpcFisherman": {
-      "Categories": []
+    "MapObject_EnemyBubble": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
     },
-    "MapObject_NpcCuccoKeeper": {
-      "Categories": []
+    "MapObject_EnemyBuzzBlob": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyCreepee": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyCrowly": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyFlyingOctorok": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyGesso": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyGhini": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyGibdos": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyHeiho": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyHidy": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyHiploop": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyHover": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyKeese": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyKuribo": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyKyorobo": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyKirby": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyKyune": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyLeever": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyLikeLike": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyMimic": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyMoblinSpear": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyMoblinSword": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyMoriblinSpear": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyMoriblinSword": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyOctorok": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyPawn": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyPeahat": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyPeese": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyPolsVoice": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyPokey": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyPiranha": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyRope": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemySeaUrchin": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemySoldierSpear": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemySoldierSword": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemySpark": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyStalfosGreen": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyStalfosOrange": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyStalKnightSpear": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyStalKnightSword": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyTail": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyTektight": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyTeresa": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyTogezo": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyVegas": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyVire": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyWizzrobe": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyZolGreen": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyZolRed": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
+    },
+    "MapObject_EnemyZombie": {
+      "Categories": [
+        "Enemies"
+      ]
+    },
+    "MapObject_EnemyZora": {
+      "Categories": [
+        "Enemies",
+        "Favorites"
+      ]
     },
     "MapObject_NpcCucco": {
       "Categories": [
+        "NPCs",
         "Favorites"
       ]
     },
     "MapObject_NpcFox": {
       "Categories": [
+        "NPCs",
         "Favorites"
       ]
     },
-    "MapObject_NpcMarin": {
-      "Categories": []
-    },
-    "MapObject_NpcOwl": {
-      "Categories": []
-    },
-    "MapObject_NpcTarin": {
-      "Categories": []
-    },
-    "MapObject_ObjBeamos": {
+    "MapObject_NpcRichardsFrog": {
       "Categories": [
+        "NPCs",
         "Favorites"
       ]
     },
-    "MapObject_ObjBigPot": {
+    "MapObject_NpcMouse": {
       "Categories": [
+        "NPCs",
         "Favorites"
       ]
     },
     "MapObject_ObjBladeTrap": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjBossDoor": {
       "Categories": [
+        "Objects",
         "Favorites"
+      ]
+    },
+    "MapObject_ObjButterfly": {
+      "Categories": [
+        "Objects"
       ]
     },
     "MapObject_ObjCactus": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjCaveRock": {
       "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_ObjColorBallSwitch": {
-      "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_ObjClosedPotDoor": {
-      "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjClosedDoor": {
       "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjClosedPotDoor": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjColorBallSwitch": {
+      "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjColorPanel": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjCrackedBlock": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjCrystalSwitch": {
       "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_ObjDesertTree": {
-      "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjDoshin": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjDosun": {
       "Categories": [
-        "Favorites"
-      ]
-    },
-    "MapObject_ObjDungeonOwlStatue": {
-      "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjDungeonFaceLamp": {
       "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjDungeonOwlStatue": {
+      "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjDungeonPot": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjDungeonStandLamp": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjElephantStatue": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjEyegoreFigure": {
-      "Categories": []
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjFlyingTile": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjFootSwitch": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjGrass": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjLawn": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjLockBlock": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjLockDoor": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjMysteryLump": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
     },
     "MapObject_ObjOrangeUnevenSwitch": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjPurpleQuartz": {
       "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjPurpleUnevenSwitch": {
       "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjSignboard": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjSkullStone": {
+      "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjSquareBlock": {
+      "Categories": [
+        "Objects",
         "Favorites"
       ]
     },
     "MapObject_ObjTreasureBox": {
       "Categories": [
+        "Objects",
+        "Favorites"
+      ]
+    },
+    "MapObject_ObjWoodenBox": {
+      "Categories": [
+        "Objects",
         "Favorites"
       ]
     }

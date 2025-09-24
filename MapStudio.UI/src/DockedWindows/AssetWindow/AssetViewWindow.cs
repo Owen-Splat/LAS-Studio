@@ -88,7 +88,7 @@ namespace MapStudio.UI
                 foreach (var item in category.Reload())
                 {
                     Config.ApplySettings(item);
-                    if (item.Categories != null && item.Categories.Contains(target))
+                    if (item.Categories.Count != 0 && item.Categories.Contains(target))
                         items.Add(item);
                 }
             }
@@ -659,7 +659,7 @@ namespace MapStudio.UI
         /// <summary>
         /// 
         /// </summary>
-        public string[] Categories { get; set; }
+        public List<string> Categories { get; set; } = new List<string>();
 
         public bool Favorited = false;
 
