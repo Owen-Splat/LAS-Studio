@@ -1,5 +1,7 @@
 Version 0.1.2
+ADDITION: Added icons for all the default favorites.
 IMPROVEMENT: Assets now keep their category regardless if it has been favorited.
+IMPROVEMENT: Tweaked the default favorites.
 Version 0.1.1
 BUG: Fixed an issue where the program would freeze up while saving.
 Version 0.1.0
