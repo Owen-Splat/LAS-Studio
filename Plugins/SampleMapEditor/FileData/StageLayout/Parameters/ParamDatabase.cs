@@ -13,7 +13,7 @@ namespace SampleMapEditor
                     return new TreasureBoxParameters();
                 case "ObjCaveRock" or "ObjSquareBlock":
                     return new PushableObjectParams();
-                case "ItemHeartPiece" or "ItemSecretSeashell":
+                case "ItemHeartPiece" or "ItemHeartContainer" or "ItemSecretSeashell":
                     return new ItemParameters();
                 case "MapStatic":
                     return new MapStaticParameters();

@@ -1,4 +1,5 @@
 Version 0.1.2
+ADDITION: Added an "Index" parameter for ItemHeartContainer.
 ADDITION: Added icons for all the default favorites.
 IMPROVEMENT: Assets now keep their category regardless if it has been favorited.
 IMPROVEMENT: Tweaked the default favorites.
