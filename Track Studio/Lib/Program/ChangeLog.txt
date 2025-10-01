@@ -1,3 +1,5 @@
+Version 0.2.0
+BUG: Fixed an issue where float parameters with 0 decimals would be read as an int
 Version 0.1.2
 ADDITION: Added an "Index" parameter for ItemHeartContainer.
 ADDITION: Added icons for all the default favorites.
