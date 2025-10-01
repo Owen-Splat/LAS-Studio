@@ -110,7 +110,10 @@ namespace SampleMapEditor.FileData.Grezzo
             dynamic param;
 
             if (paramType == 2)
+            {
                 param = FixedHash.ReadFloat(data, start + (8 * paramIndex));
+                param = param.ToString("0.0##"); // Force decimal to show, otherwise it will get saved as an int
+            }
             else
                 param = FixedHash.ReadInt(data, start + (8 * paramIndex), 4);
 
