@@ -185,9 +185,41 @@ namespace SampleMapEditor
         public List<ulong> HashList { get; set; } = new List<ulong>();
         public Random RNG { get; set; } = new Random();
 
+        /// <summary>
+        /// Return a Vector3 representation of the ActorObj position
+        /// Some actors have different origin points. Instead of creating different origin points, we simply adjust the visual to match
+        /// </summary>
         public static Vector3 GetObjPos(ActorObj obj)
         {
-            return new Vector3(obj.Position.X, obj.Position.Y, obj.Position.Z);
+            Vector3 pos = new Vector3(obj.Position.X, obj.Position.Y, obj.Position.Z);
+
+            if (obj.Name == "AreaHoleLowerLevel") // origin point is top-left
+            {
+                pos.X += obj.Scale.X / 2;
+                pos.Z += obj.Scale.Z / 2;
+            }
+            else if (obj.Name.StartsWith("Item")) // origin point is center bottom
+            {
+                pos.Y += 0.5f;
+            }
+
+            return pos;
+        }
+        public static void SetObjPos(ActorObj actor, EditableObject obj)
+        {
+            actor.Position.X = obj.Transform._position.X;
+            actor.Position.Y = obj.Transform._position.Y;
+            actor.Position.Z = obj.Transform._position.Z;
+
+            if (actor.Name == "AreaHoleLowerLevel")
+            {
+                actor.Position.X -= actor.Scale.X / 2;
+                actor.Position.Z -= actor.Scale.Z / 2;
+            }
+            else if (actor.Name.StartsWith("Item"))
+            {
+                actor.Position.Y -= 0.5f;
+            }
         }
         public static Vector3 GetObjRotation(ActorObj obj)
         {
@@ -419,9 +451,7 @@ namespace SampleMapEditor
             NodeBase node = obj.UINode;
             ActorObj actor = (ActorObj)node.Tag;
 
-            actor.Position.X = obj.Transform._position.X;
-            actor.Position.Y = obj.Transform._position.Y;
-            actor.Position.Z = obj.Transform._position.Z;
+            SetObjPos(actor, obj);
 
             actor.Rotation.X = obj.Transform.RotationEulerDegrees.X;
             actor.Rotation.Y = obj.Transform.RotationEulerDegrees.Y;
