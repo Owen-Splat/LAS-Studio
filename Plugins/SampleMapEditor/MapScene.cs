@@ -84,7 +84,21 @@ namespace SampleMapEditor
                     }
                     else
                     {
-                        CustomRender o = new CustomRender(roomFolder);
+                        EditableObject o;
+
+                        if (mapObj.Name.StartsWith("Area"))
+                        {
+                            o = new AreaWireframeRender(roomFolder);
+                        }
+                        else if (mapObj.Name == "TagLight" || mapObj.Name == "TagSwitchLight")
+                        {
+                            o = new LightRender(roomFolder);
+                        }
+                        else
+                        {
+                            o = new CustomRender(roomFolder);
+                        }
+
                         o.UINode.Header = mapObj.Name;
                         o.UINode.Icon = IconManager.MESH_ICON.ToString();
                         o.UINode.Tag = mapObj;

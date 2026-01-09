@@ -723,7 +723,21 @@ namespace SampleMapEditor
             }
             else
             {
-                CustomRender o = new CustomRender(roomNode);
+                EditableObject o;
+
+                if (actor.Name.StartsWith("Area"))
+                {
+                    o = new AreaWireframeRender(roomNode);
+                }
+                else if (actor.Name == "TagLight" || actor.Name == "TagSwitchLight")
+                {
+                    o = new LightRender(roomNode);
+                }
+                else
+                {
+                    o = new CustomRender(roomNode);
+                }
+
                 o.UINode.Header = actor.Name;
                 o.UINode.Icon = IconManager.MESH_ICON.ToString();
                 o.UINode.Tag = actor;
