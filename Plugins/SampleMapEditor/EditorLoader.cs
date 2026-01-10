@@ -236,9 +236,13 @@ namespace SampleMapEditor
             if (actor.ModelName == "Null")
             {
                 if (actor.Name == "MapStatic")
-                    return GetContentPath($"region_common\\map\\{actor.Parameters.p1}.bfres"); // Read Parameters[0] for the map model
+                    return GetContentPath($"region_common\\map\\{actor.Parameters.p1}.bfres"); // Read first parameter for the map model
                 else
                     return GetContentPath($"region_common\\actor\\{actor.Name}.bfres");
+            }
+            else if (actor.Name.EndsWith("DungeonRoof"))
+            {
+                return GetContentPath($"region_common\\{actor.Parameters.p1}"); // Read first parameter for the model path
             }
             return GetContentPath($"region_common\\actor\\{actor.ModelName}");
         }
@@ -616,6 +620,9 @@ namespace SampleMapEditor
 
 
         private bool HideObjectsWithoutModels = false;
+        private bool HideAreaObjects = false;
+        private bool HideLightObjects = false;
+        private bool HideRoofObjects = false;
         // private bool ShowHiddenContents = false;
 
         public override void DrawToolWindow()
@@ -626,10 +633,34 @@ namespace SampleMapEditor
                 {
                     if (render is CustomRender)
                         render.IsVisible = !HideObjectsWithoutModels;
-                    else
-                        foreach (string sub in hiddenObjs)
-                            if (render.UINode.Header.Contains(sub))
-                                render.IsVisible = !HideObjectsWithoutModels;
+                }
+            }
+
+            if (ImGui.Checkbox("Hide Area Objects", ref HideAreaObjects))
+            {
+                foreach (EditableObject render in Scene.Objects)
+                {
+                    if (render is AreaWireframeRender)
+                        render.IsVisible = !HideAreaObjects;
+                }
+            }
+
+            if (ImGui.Checkbox("Hide Lighting Objects", ref HideLightObjects))
+            {
+                foreach (EditableObject render in Scene.Objects)
+                {
+                    if (render is LightRender)
+                        render.IsVisible = !HideLightObjects;
+                }
+            }
+
+            if (ImGui.Checkbox("Hide Roof Objects", ref HideRoofObjects))
+            {
+                foreach (EditableObject render in Scene.Objects)
+                {
+                    ActorObj actor = render.UINode.Tag as ActorObj;
+                    if (actor.Name.EndsWith("DungeonRoof"))
+                        render.IsVisible = !HideRoofObjects;
                 }
             }
 
@@ -698,6 +729,13 @@ namespace SampleMapEditor
                 o.Models.ForEach(model =>
                 {
                     bool state = true;
+                    if (actor.Name.EndsWith("DungeonRoof"))
+                    {
+                        if (model.Name != actor.Parameters.p3.ToString())
+                        {
+                            state = false;
+                        }
+                    }
                     if (modelPathName.StartsWith("Obj"))
                         if (model != o.Models.Last())
                             state = false;
@@ -711,14 +749,6 @@ namespace SampleMapEditor
                 {
                     DrawActorProperties(o);
                 };
-                foreach (string sub in hiddenObjs)
-                {
-                    if (actor.Name.Contains(sub))
-                    {
-                        o.IsVisible = false;
-                        break;
-                    }
-                }
                 return o;
             }
             else

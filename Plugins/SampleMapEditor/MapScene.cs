@@ -55,6 +55,13 @@ namespace SampleMapEditor
                         o.Models.ForEach(model =>
                         {
                             bool state = true;
+                            if (mapObj.Name.EndsWith("DungeonRoof"))
+                            {
+                                if (model.Name != mapObj.Parameters.p3.ToString())
+                                {
+                                    state = false;
+                                }
+                            }
                             if (modelPathName.StartsWith("Obj"))
                                 if (model != o.Models.Last())
                                     state = false;
@@ -72,14 +79,6 @@ namespace SampleMapEditor
                         o.Transform.Scale = EditorLoader.GetObjScale(mapObj);
                         o.Transform.RotationEulerDegrees = EditorLoader.GetObjRotation(mapObj);
                         o.Transform.UpdateMatrix(true);
-                        foreach (string sub in loader.hiddenObjs)
-                        {
-                            if (mapObj.Name.Contains(sub))
-                            {
-                                o.IsVisible = false;
-                                break;
-                            }
-                        }
                         loader.AddRender(o);
                     }
                     else
